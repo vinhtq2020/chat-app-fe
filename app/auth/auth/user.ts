@@ -1,5 +1,5 @@
 export interface AuthService{
-    login(username: string, password: string): Promise<number>
+    register(username: string, password: string): Promise<number>
 }
 
 export interface User {

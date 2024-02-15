@@ -34,7 +34,7 @@ export const SignInForm = (props: Props) => {
     const onClickLogin = async (e: React.MouseEvent) => {
         e.preventDefault()
         try {
-            const res = await service.login(state.username, state.password)
+            const res = await service.register(state.username, state.password)
             console.log("ok");
 
         } catch (e) {

@@ -1,9 +1,15 @@
 
-import Image from 'next/image'
+"use client"
 import { SignInForm } from './auth/sign-in-form'
+import { useState } from 'react'
+import HomePage from './home/home'
 export default function Home() {
+  const [isLogin, setIsLogin] = useState(false)
+
   return (
-    <SignInForm/>
-    
+
+    isLogin ? <SignInForm /> : <HomePage />
+
+
   )
 }

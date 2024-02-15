@@ -12,10 +12,10 @@ export class AuthServiceImpl implements AuthService {
         this.http = http
         this.url = url
 
-        this.login = this.login.bind(this)
+        this.register = this.register.bind(this)
     
     }
-    login(username: string, password: string): Promise<number> {
+    register(username: string, password: string): Promise<number> {
         return this.http.post(`${this.url}/register`, {username, password})
     }
 
