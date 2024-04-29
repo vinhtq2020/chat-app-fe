@@ -1,14 +1,14 @@
 'use client';
 
 import { useContext, useRef, useState } from "react"
-import { GoogleLoginBtn } from "../components/google-loginbtn";
-import { Modal } from "../components/modal/modal";
+import { GoogleLoginBtn } from "../../components/google-loginbtn";
+import { Modal } from "../../components/modal/modal";
 import { SignUpForm } from "./sign-up-form";
-import { login } from "./actions";
-import { ValidateErrors } from "../utils/validate/model";
-import { redirect } from "next/navigation";
-import { showAlert } from "../components/toast/toast";
-import { AlertContext } from "../components/providers";
+import { login } from "../actions";
+import { ValidateErrors } from "../../utils/validate/model";
+import { RedirectType, redirect } from "next/navigation";
+import { showAlert } from "../../components/toast/toast";
+import { AlertContext } from "../../components/providers";
 
 export interface Props {
 }
@@ -55,13 +55,13 @@ export const SignInForm = (props: Props) => {
     const onSignIn = async (e: React.MouseEvent) => {
         e.preventDefault()
         try {
-            const res = await login(new FormData(refForm.current))
+            const res = await login(state.email, state.password, navigator.userAgent)
             
             if (res as ValidateErrors) {
                 setState((prevState) => ({ ...prevState, fieldErrors:  { ...(res as ValidateErrors) }}))
                 
             } else if (res == 1) {
-                redirect("")
+                redirect("/", RedirectType.replace)
             }
         } catch (err: any) {
 

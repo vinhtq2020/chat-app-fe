@@ -1,4 +1,4 @@
-import Navbar from "../components/navbar/navbar";
+import Header from "../layout/components/Header/header";
 "use client"
 
 

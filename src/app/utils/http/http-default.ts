@@ -1,3 +1,5 @@
+import { METHOD } from "./method"
+
 interface HttpDefault {
     baseURL?: string,
     timeout: number,
@@ -25,23 +27,23 @@ export class Http {
     }
     get(url: string, options?: RequestInit): Promise<Response> {
         options = { ...this.baseRequestInit, ...options }
-        return fetch(url, { ...options, method: "GET" })
+        return fetch(url, { ...options, method: METHOD.GET})
 
     }
     post(url: string, options?: RequestInit): Promise<Response> {
         options = { ...this.baseRequestInit, ...options }
-        return fetch(url, { ...options, method: "POST" })
+        return fetch(url, { ...options, method: METHOD.POST})
     }
     put(url: string, options?: RequestInit): Promise<Response> {
         options = { ...this.baseRequestInit, ...options }
-        return fetch(url, { ...options, method: "PUT" })
+        return fetch(url, { ...options, method: METHOD.PUT })
     }
     patch(url: string, options?: RequestInit): Promise<Response> {
         options = { ...this.baseRequestInit, ...options }
-        return fetch(url, { ...options, method: "PATCH" })
+        return fetch(url, { ...options, method: METHOD.PATCH})
     }
     delete(url: string, options?: RequestInit): Promise<Response> {
         options = { ...this.baseRequestInit, ...options }
-        return fetch(url, { ...options, method: "DELETE" })
+        return fetch(url, { ...options, method: METHOD.DELETE })
     }
 }

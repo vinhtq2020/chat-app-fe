@@ -1,17 +1,21 @@
 export interface AuthService {
-    login(email: string, password: string): Promise<Token>
-    register(user: User): Promise<number>
+    login(email: string, password: string,  userAgent: string, ip: string, deviceId: string): Promise<number>
+    register(user: Account): Promise<number>
+    logout(deviceId: string, ip: string, userAgent: string): Promise<number>
+    getIP():Promise<{ip: string}>
+    refresh(deviceId: string, ip: string, userAgent: string): Promise<number>
 }
 
 export interface Token {
     accessToken: string
     refreshToken: string
+    userId: string
     tokenType: string
     expires: number
 
 }
 
-export interface User {
+export interface Account {
     id?: string
     username?: string
     password?: string

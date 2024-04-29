@@ -2,22 +2,16 @@
 
 import { getAuthService } from "../auth/service"
 import { InputValidate, useSchemaItem } from "../../utils/validate/validate"
-import { AuthService, User } from "../auth/auth"
-import { cookies } from "next/headers"
+import { Account } from "../auth/auth"
 import { ValidateErrors } from "../../utils/validate/model"
 import { Error422Message, ResponseError } from "../../utils/exception/model/response"
+import { cookies } from "next/headers"
+import { getDeviceId } from "../../utils/auth"
+import { removeCookies, storeCookies } from "../../action"
 
 type RegisterActionResult = number | ValidateErrors
 
-export async function register(data: FormData): Promise<RegisterActionResult> {
-    const user: User = {
-        email: data.get("email") as string,
-        username: data.get("username") as string,
-        password: data.get("password") as string,
-        confirmPassword: data.get("confirmPassword") as string,
-        phone: data.get("phone") as string,
-    }
-
+export async function register(user: Account): Promise<RegisterActionResult> {
     const errs = InputValidate.object({
         email: useSchemaItem("email").isRequired().email("email is not valid"),
         username: useSchemaItem("username").isRequired().hasMaxLength(12).hasMinLength(3),
@@ -53,9 +47,7 @@ export async function register(data: FormData): Promise<RegisterActionResult> {
 
 }
 
-export async function login(data: FormData): Promise<ValidateErrors | number> {
-    const email = data.get("email") as string
-    const password = data.get("password") as string
+export async function login(email: string, password: string, userAgent: string): Promise<ValidateErrors | number> {
 
     const errs = InputValidate.object({
         email: useSchemaItem("email").isRequired().email("email is not valid"),
@@ -70,20 +62,33 @@ export async function login(data: FormData): Promise<ValidateErrors | number> {
     }
 
     try {
-        const res = await getAuthService().login(email, password)
-        if (res != null) {
-            cookies().set("refreshToken", res.refreshToken, { httpOnly: true, secure: true, sameSite: true })
-            cookies().set("accessToken", res.accessToken, { httpOnly: true, secure: true, sameSite: true })
-        }
-
+        const ip = (await getAuthService().getIP()).ip
+        const deviceId = getDeviceId()
+        const res = await getAuthService().login(email, password, userAgent, ip, deviceId)
         return 1
     } catch (e) {
+
         throw e
     }
 
 
 
 }
-export async function logout(): Promise<number> {
-    throw new Error("Method not implemented.")
+export async function logout(userAgent: string): Promise<number> {
+    try {
+        const deviceId = getDeviceId()
+        const ip = (await getAuthService().getIP()).ip
+
+        if (deviceId.length == 0 || ip.length == 0 || userAgent.length == 0 || ip.length == 0) {
+            return -1
+        }
+
+        const res = await getAuthService().logout(deviceId, ip, userAgent)
+        if (res > 0) {
+            await removeCookies()
+        }
+        return res
+    } catch (e) {
+        throw e
+    }
 }

@@ -1,15 +1,10 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
-import { SessionProvider } from 'next-auth/react'
 import { Providers } from './components/providers'
-import { SignInForm } from './auth/sign-in-form'
-import { useState } from 'react'
-import Navbar from './components/navbar/navbar'
+import { SignInForm } from './auth/components/sign-in-form'
+import Header from './layout/components/Header/header'
 import Sidebar from './components/sidebar/sidebar'
 import { checkAuthentication } from './utils/auth'
-import { Modal } from './components/modal/modal'
-import { redirect, useSearchParams } from 'next/navigation'
 import AlertModal from './components/toast/toast'
 
 // const inter = Inter({ subsets: ['latin'] })
@@ -25,14 +20,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const isLogin = checkAuthentication()
-  
   return (
     <html lang="en">
       <body>
         <Providers>
           {!isLogin ? <SignInForm/> :
             <div className='h-full' >
-              <Navbar />
+              <Header />
               <div className='w-full flex flex-row justify-between gap-4 p-4 h-[calc(100%-56px)]'>
                 <Sidebar />
                 {children}
