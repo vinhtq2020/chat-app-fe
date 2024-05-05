@@ -16,18 +16,22 @@ export interface Cookie {
     [key: string]: any
 }
 
-export class Cookies {
-    static accessToken = "accessToken"
-    static userId = "userId"
+export interface PassportKeys {
+    [key: string]: string
 }
+export const PassportKeys: PassportKeys = {
+    accessToken: 'accessToken',
+    userId: 'userId'
+}
+
 export interface StoreRequestCookie {
     accessToken?: Cookie
     userId?: Cookie;
 }
 export const getSetCookieFromResponse = (response: Response) => {
     let tokenObject: StoreRequestCookie = {
-        accessToken: undefined,
-        userId: undefined
+      accessToken: undefined,
+      userId: undefined,
     }
     response.headers.getSetCookie().forEach(item => {
 
@@ -55,8 +59,6 @@ export const getSetCookieFromResponse = (response: Response) => {
                         cookieItem[keyprops] = true
                     }
                 }
-                console.log(tokenObject[key]);
-
             }
         }
 
@@ -65,5 +67,18 @@ export const getSetCookieFromResponse = (response: Response) => {
 }
 
 export const getCookieHeader = () => {
-    return cookies().getAll().filter(item => item.name == Cookies.accessToken || item.name == Cookies.userId).toString()
+    Object.keys(PassportKeys).forEach((item) => {
+        const key = cookies().get(item)
+
+    })
+
+    let cookieHeader = ""
+    cookies().getAll().filter(item => item.name == PassportKeys.accessToken || item.name == PassportKeys.userId).forEach(item => {
+        cookieHeader += parseCookietoString(item)
+    })
+    return cookieHeader
+}
+
+const parseCookietoString = (cookie: RequestCookie) => {
+    return cookie.name + "=" + cookie.value + ";"
 }

@@ -4,10 +4,13 @@ import { ResponseError } from "@/src/app/utils/exception/model/response"
 import { Headers, getCookieHeader, getSetCookieFromResponse } from "@/src/app/utils/http/headers"
 import { storeCookies } from "@/src/app/action"
 import { METHOD } from "@/src/app/utils/http/method"
+import { HttpService, httpInstance } from "@/src/app/utils/http/http-default"
 
 export class AuthServiceClient implements AuthService {
+    private httpInstance: HttpService
     private auth_url: string = config.auth_url
-    constructor() {
+    constructor(httpInstance: HttpService) {
+        this.httpInstance = httpInstance
         this.login = this.login.bind(this)
         this.register = this.register.bind(this)
         this.logout = this.logout.bind(this)
@@ -19,7 +22,7 @@ export class AuthServiceClient implements AuthService {
     async getIP(): Promise<{ ip: string }> {
         try {
             // Make the request
-            const res = await fetch('https://api.ipify.org?format=json')
+            const res = await this.httpInstance.get('https://api.ipify.org?format=json')
             // Extract JSON body content from HTTP response
 
             const response = await res.json()
@@ -39,8 +42,7 @@ export class AuthServiceClient implements AuthService {
 
     async login(email: string, password: string, userAgent: string, ip: string, deviceId: string): Promise<number> {
         try {
-            const res = await fetch(`${this.auth_url}/login`, {
-                method: METHOD.POST,
+            const res = await this.httpInstance.post(`${this.auth_url}/login`, {
                 headers: {
                     [Headers.contentType]: 'application/json',
                     [Headers.deviceId]: deviceId,
@@ -68,25 +70,29 @@ export class AuthServiceClient implements AuthService {
         }
 
     }
-    private async handleResponse<T>(res: Response, callback?: () => void): Promise<T> {
-        const text = await res.text()
-        if (!res.ok) {
-            if (res.status == 422) {
-                const response = JSON.parse(text)
-                throw new ResponseError(res.statusText, res.status, response)
+    private async handleResponse<T>(res: Response, onSuccess?: () => void): Promise<T> {
+        return res.json().then(
+            (response) => {
+                if (!res.ok) {
+                    switch (res.status) {
+                        case 422: throw new ResponseError(res.statusText, res.status, response)
+                        default: throw new ResponseError(res.statusText, res.status, null)
+                    }
+                }
+                response = response as T
+                onSuccess && onSuccess()
+                return response
             }
+        ).catch((e:Error) => {
+            throw new ResponseError(e.message, res.status, null)
+        })
 
-            throw new ResponseError(res.statusText, res.status, null)
-        }
-        const response = JSON.parse(text) as T
-        callback && callback()
-        return response
+
 
     }
     async register(user: Account): Promise<number> {
         try {
-            const res = await fetch(`${this.auth_url}/register`, {
-                method: METHOD.POST,
+            const res = await this.httpInstance.post(`${this.auth_url}/register`, {
                 headers: {
                     [Headers.contentType]: 'application/json'
                 },
@@ -99,9 +105,9 @@ export class AuthServiceClient implements AuthService {
         }
     }
     async logout(deviceId: string, ip: string, userAgent: string): Promise<number> {
+
         try {
-            const res = await fetch(`${this.auth_url}/logout`, {
-                method: METHOD.GET,
+            const res = await this.httpInstance.get(`${this.auth_url}/logout`, {
                 headers: {
                     [Headers.contentType]: 'application/json',
                     [Headers.deviceId]: deviceId,
@@ -120,8 +126,7 @@ export class AuthServiceClient implements AuthService {
     }
     async refresh(deviceId: string, ip: string, userAgent: string): Promise<number> {
         try {
-            const res = await fetch(`${this.auth_url}/register`, {
-                method: METHOD.GET,
+            const res = await this.httpInstance.get(`${this.auth_url}/register`, {
                 headers: {
                     [Headers.contentType]: 'application/json',
                     [Headers.deviceId]: deviceId,
@@ -129,11 +134,16 @@ export class AuthServiceClient implements AuthService {
                     [Headers.xForwardedFor]: ip,
                     [Headers.Cookie]: getCookieHeader(),
                 },
-               
+
                 cache: 'no-cache'
             })
 
-            return this.handleResponse<number>(res)
+            return this.handleResponse<number>(res, () => {
+                const setCookies = getSetCookieFromResponse(res)
+                storeCookies({
+                    accessToken: setCookies["accessToken"],
+                })
+            })
         } catch (err: unknown) {
             throw err
         }
@@ -141,11 +151,11 @@ export class AuthServiceClient implements AuthService {
 
 }
 
-let authService = new AuthServiceClient()
+let authService = new AuthServiceClient(httpInstance)
 
 export function getAuthService(): AuthService {
     if (authService == null) {
-        authService = new AuthServiceClient()
+        authService = new AuthServiceClient(httpInstance)
     }
     return authService
 }

@@ -67,7 +67,7 @@ export async function login(email: string, password: string, userAgent: string):
         const res = await getAuthService().login(email, password, userAgent, ip, deviceId)
         return 1
     } catch (e) {
-
+        
         throw e
     }
 

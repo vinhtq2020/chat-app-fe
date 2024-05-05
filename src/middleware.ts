@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
     }
 
     if (!isLogin) {
-        return NextResponse.redirect(new URL("/auth", request.url));
+        return NextResponse.redirect(new URL("/", request.url));
     }
     return NextResponse.next()
 }

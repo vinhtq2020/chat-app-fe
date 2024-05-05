@@ -1,5 +1,5 @@
 "use client";
-import { useContext } from "react";
+import { use, useContext } from "react";
 import { logout } from "../../../auth/actions";
 import { SearchInput } from "../../../home/components/search-input";
 import { showAlert } from "../../../components/toast/toast";
@@ -9,7 +9,7 @@ import Link from "next/link";
 import MessageIcon from "../../../components/message-icon/message-icon";
 
 export default function Header() {
-    const alertContext = useContext(AlertContext)
+    const alertContext = use(AlertContext)
     const router = useRouter()
 
     const onLogout = () => {

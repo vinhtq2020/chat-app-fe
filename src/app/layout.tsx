@@ -6,6 +6,8 @@ import Header from './layout/components/Header/header'
 import Sidebar from './components/sidebar/sidebar'
 import { checkAuthentication } from './utils/auth'
 import AlertModal from './components/toast/toast'
+import { userAgent, userAgentFromString } from 'next/server'
+import { headers } from 'next/headers'
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -20,10 +22,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const isLogin = checkAuthentication()
+  const reqUserAgent = navigator.userAgent
+  
   return (
     <html lang="en">
       <body>
-        <Providers>
+        <Providers userAgent={reqUserAgent}>
           {!isLogin ? <SignInForm/> :
             <div className='h-full' >
               <Header />

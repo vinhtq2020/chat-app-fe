@@ -39,7 +39,6 @@ export const SignUpForm = (props: Props) => {
                 showAlert(alertContext, "Success", "register account success", () => props.onRegisterSuccess())
             } else {
                 setState((prevState) => ({ ...prevState, fieldErrors: { ...(res as ValidateErrors) } }))
-                console.log(state);
 
             }
 
