@@ -1,7 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:wght@100;300;400;500;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:wght@100;300;400;500;700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @import "./styles/google-icon.css";
-
 
 @tailwind base;
 @tailwind components;
@@ -23,6 +22,20 @@
 body {
   font-family: "Poppins", sans-serif;
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(180deg, rgba(51,185,231,1) 17%, rgba(1,81,176,1) 98%);
+  background: linear-gradient(
+    180deg,
+    rgba(51, 185, 231, 1) 17%,
+    rgba(1, 81, 176, 1) 98%
+  );
   height: 100vh;
+}
+
+@layer base {
+  :root {
+    --color-glass-400: rgba(255, 255, 255, 0.4);
+    --color-glass-500: rgba(255, 255, 255, 0.5);
+    --color-glass-300: rgba(255, 255, 255, 0.3);
+    --color-glass-200: rgba(255, 255, 255, 0.2);
+    --color-glass-100: rgba(255, 255, 255, 0.1);
+  }
 }

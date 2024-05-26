@@ -1,14 +1,14 @@
 'use client';
 
 import { useContext, useRef, useState } from "react"
-import { GoogleLoginBtn } from "../../components/google-loginbtn";
-import { Modal } from "../../components/modal/modal";
+import { GoogleLoginBtn } from "../../components/GoogleLoginButton";
 import { SignUpForm } from "./sign-up-form";
 import { login } from "../actions";
 import { ValidateErrors } from "../../utils/validate/model";
 import { RedirectType, redirect } from "next/navigation";
 import { showAlert } from "../../components/toast/toast";
 import { AlertContext } from "../../components/providers";
+import { Modal } from "../../components/Modal/Modal";
 
 export interface Props {
 }

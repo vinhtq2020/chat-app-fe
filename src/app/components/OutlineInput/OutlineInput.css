@@ -1,0 +1,8 @@
+input[type="text"]:focus ~ .input-text,
+input[type="text"]:not(:placeholder-shown) ~ .input-text {
+  @apply text-blue-500 bg-inherit transform -translate-y-10 -translate-x-2 scale-75;
+}
+
+input[type="text"]:not(:focus):not(:placeholder-shown) ~ .input-text {
+  @apply text-gray-400 text-opacity-50;
+}

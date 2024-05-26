@@ -16,4 +16,5 @@ export async function storeCookies(req: StoreRequestCookie) {
 export async function removeCookies() {
     cookies().delete("userId")
     cookies().delete("accessToken")
+    cookies().delete("refreshToken")
 }

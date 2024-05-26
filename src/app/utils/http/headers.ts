@@ -6,8 +6,38 @@ export class Headers {
     static deviceId = "Device-Id"
     static userAgent = "User-Agent"
     static xForwardedFor = "X-Forwarded-For"
-    static Cookie = "Cookie"
+    static cookie = "Cookie"
+    static setCookie = "Set-Cookie"
 }
+
+export class ContentType {
+    static applicationJson = "application/json"
+    static applicationFormUrlEncoded = "application/x-www-form-urlencoded"
+    static textPlain = "text/plain"
+    static xml = "text/xml"
+    static isJson(contentType: string) {
+        return contentType.includes(ContentType.applicationJson)
+    }
+    static isFormUrlEncoded(contentType: string) {
+        return contentType.includes(ContentType.applicationFormUrlEncoded)
+    }
+    static isText(contentType: string) {
+        return contentType.includes(ContentType.textPlain)
+    }
+    static isXml(contentType: string) {
+        return contentType.includes(ContentType.xml)
+    }
+    static isJsonOrFormUrlEncoded(contentType: string) {
+        return ContentType.isJson(contentType) || ContentType.isFormUrlEncoded(contentType)
+    }
+    static isJsonOrFormUrlEncodedOrText(contentType: string) {
+        return ContentType.isJson(contentType) || ContentType.isFormUrlEncoded(contentType) || contentType.includes(ContentType.textPlain)
+    }
+    static isJsonOrFormUrlEncodedOrTextOrXml(contentType: string) {
+        return ContentType.isJson(contentType) || ContentType.isFormUrlEncoded(contentType) || contentType.includes(ContentType.textPlain) || contentType.includes(ContentType.xml)
+    }
+}
+
 export interface Cookie {
     value: string
     secure?: boolean
@@ -16,22 +46,29 @@ export interface Cookie {
     [key: string]: any
 }
 
-export interface PassportKeys {
-    [key: string]: string
-}
-export const PassportKeys: PassportKeys = {
-    accessToken: 'accessToken',
-    userId: 'userId'
+/**
+ * cookie send between client and server
+ */
+export class PassportKeys {
+    static accessToken = 'accessToken'
+    static userId = 'userId'
+    static refreshToken = 'refreshToken'
 }
 
+/**
+ * cookies store in browser 
+ */
 export interface StoreRequestCookie {
     accessToken?: Cookie
+    refreshToken?: Cookie
     userId?: Cookie;
+
 }
 export const getSetCookieFromResponse = (response: Response) => {
     let tokenObject: StoreRequestCookie = {
-      accessToken: undefined,
-      userId: undefined,
+        accessToken: undefined,
+        userId: undefined,
+        refreshToken: undefined,
     }
     response.headers.getSetCookie().forEach(item => {
 

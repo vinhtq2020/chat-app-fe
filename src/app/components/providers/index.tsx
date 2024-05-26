@@ -1,12 +1,10 @@
 'use client';
 
 import { SessionProvider } from "next-auth/react"
-import { userAgent } from "next/server";
 import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "react"
 
 export interface Props {
     children: ReactNode;
-    userAgent: string;
 }
 
 /**
@@ -29,17 +27,13 @@ export interface AlertContext {
 
 export const AlertContext = createContext<AlertContext | undefined>(undefined)
 
-export const UserAgentContext = createContext<string | undefined>(undefined)
 
 
 export const Providers = (props: Props) => {
     const [alertState, setAlertState] = useState<AlertState>()
     return (<SessionProvider>
         <AlertContext.Provider value={{ alertState, setAlertState }}>
-            <UserAgentContext.Provider value={props.userAgent}>
-                {props.children}
-
-            </UserAgentContext.Provider>
+            {props.children}
         </AlertContext.Provider>
     </SessionProvider>)
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ReactPortal from "../react-portal/react-portal";
+import ReactPortal from "../ReactPortal/ReactPortal";
 
 export interface Props {
     children: React.ReactElement

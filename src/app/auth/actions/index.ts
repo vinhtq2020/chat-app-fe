@@ -6,7 +6,7 @@ import { Account } from "../auth/auth"
 import { ValidateErrors } from "../../utils/validate/model"
 import { Error422Message, ResponseError } from "../../utils/exception/model/response"
 import { cookies } from "next/headers"
-import { getDeviceId } from "../../utils/auth"
+import { getDeviceId, getIP } from "../../utils/auth"
 import { removeCookies, storeCookies } from "../../action"
 
 type RegisterActionResult = number | ValidateErrors
@@ -62,7 +62,7 @@ export async function login(email: string, password: string, userAgent: string):
     }
 
     try {
-        const ip = (await getAuthService().getIP()).ip
+        const ip = await getIP()
         const deviceId = getDeviceId()
         const res = await getAuthService().login(email, password, userAgent, ip, deviceId)
         return 1

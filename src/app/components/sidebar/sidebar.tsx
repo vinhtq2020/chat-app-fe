@@ -2,7 +2,7 @@ export default function Sidebar() {
     return (
         <>
             <section className="sticky top-24 flex flex-col w-48 justify-start gap-4">
-                <div className=" bg-transparent shadow-md rounded-lg p-4">
+                <div className=" bg-[--color-glass-100] shadow-lg border backdrop-blur-md border-t-[--color-glass-500] border-l-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200] rounded-lg p-4">
                     <div>
                         <div className="py-2">
                             Profile
@@ -20,7 +20,7 @@ export default function Sidebar() {
 
                 </div>
 
-                <div className=" bg-transparent  shadow-md rounded-lg p-4">
+                <div className=" bg-[--color-glass-100] border backdrop-blur-md shadow-lg  border-l-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200] rounded-lg p-4">
                     <div>
                         <div className="py-2">
                             Profile

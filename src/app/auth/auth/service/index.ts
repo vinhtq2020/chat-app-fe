@@ -1,10 +1,10 @@
 import { AuthService, Token, Account } from "../auth"
 import { config } from "../../../config"
 import { ResponseError } from "@/src/app/utils/exception/model/response"
-import { Headers, getCookieHeader, getSetCookieFromResponse } from "@/src/app/utils/http/headers"
+import { ContentType, Headers, PassportKeys, getCookieHeader, getSetCookieFromResponse } from "@/src/app/utils/http/headers"
 import { storeCookies } from "@/src/app/action"
-import { METHOD } from "@/src/app/utils/http/method"
 import { HttpService, httpInstance } from "@/src/app/utils/http/http-default"
+import { Resource } from "@/src/app/utils/resource/resourse"
 
 export class AuthServiceClient implements AuthService {
     private httpInstance: HttpService
@@ -44,7 +44,7 @@ export class AuthServiceClient implements AuthService {
         try {
             const res = await this.httpInstance.post(`${this.auth_url}/login`, {
                 headers: {
-                    [Headers.contentType]: 'application/json',
+                    [Headers.contentType]: ContentType.applicationJson,
                     [Headers.deviceId]: deviceId,
                     [Headers.userAgent]: userAgent,
                     [Headers.xForwardedFor]: ip,
@@ -62,8 +62,10 @@ export class AuthServiceClient implements AuthService {
 
                 storeCookies({
                     accessToken: setCookies["accessToken"],
+                    refreshToken: setCookies["refreshToken"],
                     userId: setCookies["userId"],
                 })
+                
             })
         } catch (err: unknown) {
             throw err
@@ -71,8 +73,14 @@ export class AuthServiceClient implements AuthService {
 
     }
     private async handleResponse<T>(res: Response, onSuccess?: () => void): Promise<T> {
-        return res.json().then(
-            (response) => {
+        let contentType = res.headers.get(Headers.contentType)
+        if (contentType == null) {
+            contentType = ContentType.textPlain
+        }
+        try {
+            if (ContentType.isJson(contentType)) {
+
+                let response = await res.json()
                 if (!res.ok) {
                     switch (res.status) {
                         case 422: throw new ResponseError(res.statusText, res.status, response)
@@ -82,19 +90,21 @@ export class AuthServiceClient implements AuthService {
                 response = response as T
                 onSuccess && onSuccess()
                 return response
+
+            } else {
+                const errMessage = await res.text()
+                throw new ResponseError(errMessage, res.status, null)
             }
-        ).catch((e:Error) => {
-            throw new ResponseError(e.message, res.status, null)
-        })
-
-
+        } catch (e) {
+            throw e
+        }
 
     }
     async register(user: Account): Promise<number> {
         try {
             const res = await this.httpInstance.post(`${this.auth_url}/register`, {
                 headers: {
-                    [Headers.contentType]: 'application/json'
+                    [Headers.contentType]: ContentType.applicationJson
                 },
                 body: JSON.stringify(user),
             })
@@ -109,11 +119,11 @@ export class AuthServiceClient implements AuthService {
         try {
             const res = await this.httpInstance.get(`${this.auth_url}/logout`, {
                 headers: {
-                    [Headers.contentType]: 'application/json',
+                    [Headers.contentType]: ContentType.applicationJson,
                     [Headers.deviceId]: deviceId,
                     [Headers.userAgent]: userAgent,
                     [Headers.xForwardedFor]: ip,
-                    [Headers.Cookie]: getCookieHeader()
+                    [Headers.cookie]: getCookieHeader()
                 },
                 cache: "no-cache"
             })
@@ -128,11 +138,11 @@ export class AuthServiceClient implements AuthService {
         try {
             const res = await this.httpInstance.get(`${this.auth_url}/register`, {
                 headers: {
-                    [Headers.contentType]: 'application/json',
+                    [Headers.contentType]: ContentType.applicationJson,
                     [Headers.deviceId]: deviceId,
                     [Headers.userAgent]: userAgent,
                     [Headers.xForwardedFor]: ip,
-                    [Headers.Cookie]: getCookieHeader(),
+                    [Headers.cookie]: getCookieHeader(),
                 },
 
                 cache: 'no-cache'
