@@ -9,7 +9,6 @@ export async function storeCookies(req: StoreRequestCookie) {
         if (cookie) {
             cookies().set(k, cookie.value, { httpOnly: cookie.httpOnly, secure: cookie.secure, expires: new Date(cookie.expires ?? "") })
         }
-
     }
 }
 

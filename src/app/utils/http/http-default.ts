@@ -1,4 +1,4 @@
-import { getAuthService } from "../../auth/auth/service";
+import { getAuthService } from "../../features/auth/service";
 import { METHOD } from "./method";
 import { Interceptors } from "./interceptor";
 import { getDeviceId } from "../auth";

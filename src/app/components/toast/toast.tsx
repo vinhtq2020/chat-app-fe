@@ -1,6 +1,6 @@
 "use client";
 import { useContext } from "react"
-import { AlertContext } from "../providers"
+import { AlertContext } from "../Providers"
 
 export const showAlert = (alertContext: AlertContext | undefined, title: string, message: string, onClose?: () => void) => {
 

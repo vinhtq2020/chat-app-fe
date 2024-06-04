@@ -1,19 +1,71 @@
 import { NextRequest, NextResponse, userAgent } from "next/server";
-import { checkAuthentication } from "./app/utils/auth";
+import { localeConfig } from "./app/utils/resource/locales";
 
-const publicRoutes = ["/auth", "/"];
-const protectedRoutes = ["/home", "/chat", "/profile"];
+interface AppPath {
+  locale?: string;
+  page?: string;
+  subPage?: string;
+}
+
+const publicRoutes = ["/auth", ""];
+const protectedRoutes = ["/home", "/chat", "/profile", ""];
+
+
+function mapPath(request: NextRequest): Partial<AppPath> | undefined {
+  const regex = new RegExp(
+    "^\\/(?<locale>[a-z]{2})(\\/|((?<page>\\/[a-z0-9-_]+)(\\/|(?<subPage>\\/.+))?))?$",
+    "g"
+  );
+
+  const res = regex.exec(request.nextUrl.pathname);
+  if (res == null) {
+    return undefined;
+  }
+
+  return res.groups;
+}
+
+function getBrowserLanguage(request: NextRequest) {
+  return request.headers
+    .get("accept-language")
+    ?.split(",")
+    .map((i) => i.split(";"))
+    ?.reduce(
+      (ac: { code: string; priority: string }[], lang) => [
+        ...ac,
+        {
+          code: lang[0],
+          priority: lang[1],
+        },
+      ],
+      []
+    )
+    ?.sort((a, b) => (a.priority > b.priority ? -1 : 1))
+    ?.find((i) => localeConfig.locales.includes(i.code.substring(0, 2)))
+    ?.code?.substring(0, 2);
+}
+
 export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
-  const isPublicRoutes = publicRoutes.includes(path);
+  const { pathname } = request.nextUrl;
+  const appPath = mapPath(request);
+
+  if (!appPath || !appPath.locale) {
+    const locale = getBrowserLanguage(request) ?? localeConfig.defaultLocale;
+    request.nextUrl.pathname = `/${locale}${pathname}`;
+    return NextResponse.redirect(request.nextUrl);
+  }
+
+  let localePath = localeConfig.locales.find((locale) => appPath?.locale === locale);
+
+  const isProtectedRoute = protectedRoutes.includes(appPath.page ?? "");
+  const isPublicRoutes = publicRoutes.includes(appPath.page ?? "");
 
   // check authentication
   const browser = userAgent(request).browser.name ?? "";
-  let isLogin = false
+  let isLogin = false;
   try {
     // isLogin = await checkAuthentication(browser);
-    isLogin = true
+    isLogin = true;
   } catch (error) {
     isLogin = false;
   }
@@ -21,24 +73,28 @@ export async function middleware(request: NextRequest) {
   if (isProtectedRoute) {
     // is Not Login
     if (!isLogin) {
-      switch (path) {
-        case "/":
-          return NextResponse.rewrite(new URL("/auth", request.url));
-        case "/auth":
-          return NextResponse.redirect(new URL("/", request.url));
-        case "/home":
-          console.log("sadsad");
-          return NextResponse.redirect(new URL("/", request.url));
+      switch (pathname) {
+        case `/${localePath}`:
+          return NextResponse.rewrite(
+            new URL(`/${localePath}/auth`, request.url)
+          );
+        case `/${localePath}/auth`:
+          
+          return NextResponse.redirect(new URL(`/${localePath}`, request.url));
+        case `/${localePath}/home`:
+          return NextResponse.redirect(new URL(`/${localePath}`, request.url));
         default:
-          return NextResponse.redirect(new URL("/", request.url));
+          return NextResponse.redirect(new URL(`/${localePath}`, request.url));
       }
     } else {
       // is Login
-      switch (path) {
-        case "/":
-          return NextResponse.rewrite(new URL("/home", request.url));
-        case "/auth":
-          return NextResponse.redirect(new URL("/", request.url));
+      switch (pathname) {
+        case `/${localePath}`:
+          return NextResponse.rewrite(
+            new URL(`/${localePath}/home`, request.url)
+          );
+        case `/${localePath}/auth`:
+          return NextResponse.redirect(new URL(`/${localePath}`, request.url));
         default:
           return NextResponse.next();
       }
@@ -46,11 +102,13 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isPublicRoutes) {
-    switch (path) {
-      case "/":
-        return NextResponse.rewrite(new URL("/auth", request.url));
-      case "/auth":
-        return NextResponse.redirect(new URL("/", request.url));
+    switch (pathname) {
+      case `/${localePath}`:
+        return NextResponse.rewrite(
+          new URL(`/${localePath}/auth`, request.url)
+        );
+      case `/${localePath}/auth`:
+        return NextResponse.redirect(new URL(`/${localePath}`, request.url));
       default:
         return NextResponse.next();
     }
@@ -60,5 +118,33 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/auth", "/", "/home", "/chat", "/profile"],
+  matcher: [
+    {
+      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
+
+    {
+      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
+      has: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
+
+    {
+      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
+      has: [{ type: "header", key: "x-present" }],
+      missing: [{ type: "header", key: "x-missing", value: "prefetch" }],
+    },
+
+    "/([a-z0-9]{2})/auth",
+    "/([a-z0-9]{2})/",
+    "/([a-z0-9]{2})/home",
+    "/([a-z0-9]{2})/chat",
+    "/([a-z0-9]{2})/profile",
+  ],
 };

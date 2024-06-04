@@ -1,10 +1,10 @@
 import { cookies } from "next/headers"
 import { uuidv4 } from "../random/random"
-import { getAuthService } from "../../auth/auth/service"
+import { getAuthService } from "../../features/auth/service"
 import { Resource } from "../resource/resourse"
 
 /**
- * Check authentication from acess token and refresh token
+ * Check authentication from acess token and refresh token.
  */
 export const checkAuthentication = async (userAgent: string): Promise<boolean> => {
     const accessToken = cookies().get("accessToken")

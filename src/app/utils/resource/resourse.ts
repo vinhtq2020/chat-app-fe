@@ -1,9 +1,11 @@
+import {  getDictionary } from "./locales"
 import { Session } from "./session/session"
 
 export class Resource {
     private static session: Session = {
         
     }
+
     static getSession(): Session {
         return this.session
     }
