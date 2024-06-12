@@ -22,18 +22,28 @@
 body {
   font-family: "Poppins", sans-serif;
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-    180deg,
-    rgba(51, 185, 231, 1) 17%,
-    rgba(1, 81, 176, 1) 98%
-  );
+  background-image: url("https://blogs.windows.com/wp-content/uploads/prod/sites/2/2021/10/Windows-11-Bloom-Screensaver-Dark-scaled.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background: linear-gradient(
+    to bottom,
+    rgb(70, 214, 126),
+    rgba(1, 81, 176, 1)
+  ); */
+  /* background: linear-gradient(
+    to bottom,
+    #ff359b,
+    #fffd87
+  ); */
   height: 100vh;
 }
 
 @layer base {
   :root {
-    --color-glass-400: rgba(255, 255, 255, 0.4);
+    --color-glass-700: rgba(255, 255, 255, 0.7);
+    --color-glass-600: rgba(255, 255, 255, 0.6);
     --color-glass-500: rgba(255, 255, 255, 0.5);
+    --color-glass-400: rgba(255, 255, 255, 0.4);
     --color-glass-300: rgba(255, 255, 255, 0.3);
     --color-glass-200: rgba(255, 255, 255, 0.2);
     --color-glass-100: rgba(255, 255, 255, 0.1);

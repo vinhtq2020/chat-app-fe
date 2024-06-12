@@ -64,6 +64,7 @@ export async function middleware(request: NextRequest) {
   const browser = userAgent(request).browser.name ?? "";
   let isLogin = false;
   try {
+    // hard code
     // isLogin = await checkAuthentication(browser);
     isLogin = true;
   } catch (error) {

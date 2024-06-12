@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import OutlineInput from "../../../../components/OutlineInput/OutlineInput";
 interface Props {
   list: string[];
-  handleInputSearch: () => void;
+  onSearchSubmit: (q: string) => void;
 }
 
 interface InternalState {
@@ -13,19 +13,21 @@ const internalState: InternalState = {};
 
 export const SearchBar = (props: Props) => {
   const [state, setState] = useState(internalState);
-
+  const formRef = useRef(null)
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setState((prev) => ({ ...prev, q: e.target.value }));
+    console.log(formRef);
+    
+    // props.onSearchSubmit(e.target.value);
   };
 
   return (
     <div className="relative">
-      <div className="relative flex bg-white rounded-full items-center flex-row justify-center shadow-md gap-2 h-8 overflow-hidden">
+      <form ref={formRef} className="relative flex bg-white rounded-full items-center flex-row justify-center shadow-md gap-2 h-8 overflow-hidden">
         <div className="h-full flex justify-center items-center">
-          <button
+          <div
             className="flex items-center rounded-full justify-center p-1 shadow-md h-4/5 ml-1"
-            type="button"
           >
             <svg
               viewBox="0 0 24 24"
@@ -47,22 +49,23 @@ export const SearchBar = (props: Props) => {
                 ></path>
               </g>
             </svg>
-          </button>
+          </div>
         </div>
         <input
           type="text"
           className=" w-full h-full border-none outline-none"
           placeholder="Type to search ..."
+          onChange={(e) => onSearchChange}
         />
-      </div>
+      </form>
 
-      { props.list.length > 0 && 
+      {props.list.length > 0 && (
         <div className="absolute bg-white w-full rounded-lg p-1 mt-2 shadow-md">
           {props.list.map((item, index) => (
             <div key={index}>{item}</div>
           ))}
         </div>
-      }
+      )}
     </div>
   );
 };

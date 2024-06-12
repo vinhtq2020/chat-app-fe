@@ -24,11 +24,11 @@ export default function Header() {
   };
   return (
     <>
-      <nav className="z-10 flex flex-row justify-around h-14 sticky bg-transparent top-0 left-0 right-0 shadow-md items-center">
+      <nav className="z-10 sm:hidden md:flex flex-row justify-around h-14 sticky bg-transparent top-0 shadow-md items-center w-screen">
         <div className=""></div>
           <SearchBar
             list={[]}
-            handleInputSearch={function (): void {
+            onSearchSubmit={function (): void {
               throw new Error("Function not implemented.");
             }}
           />

@@ -1,5 +1,12 @@
+import { Filter } from "../../services/base/search/search";
+
 export interface StoryService {
-  getStories(): Story[];
+  getPosts(filter: StoryFilter): Promise<Story[]>;
+}
+
+export interface StoryFilter extends Filter {
+  excludeComment?: boolean
+  createdAt?: Date
 }
 
 export interface Story {
@@ -11,8 +18,9 @@ export interface Story {
   updatedBy?: string;
   history?: string;
   content?: string;
-  media?: "images" | "video";
+  media?: Media;
   comment?: string;
+  expression?: Expression;
 }
 
 interface Expression {
@@ -23,18 +31,22 @@ interface Expression {
   };
 }
 
-interface Emotions extends Record<EmotionType, Emotion> { 
-}
+export interface Emotions extends Record<EmotionType, Emotion> {}
 
 interface Emotion {
   total: number;
   users: ShortUserInfo[];
 }
 
-type EmotionType = "like" | "hate" | "suprised" | "cry"
+type EmotionType = "like" | "angry" | "suprised" | "cry"| "happy";
 
-interface ShortUserInfo {
+export interface ShortUserInfo {
   authorId: string;
   username: string;
   avatarURL: string;
+}
+
+export interface Media {
+  type: "link" | "image" | "video";
+  url: string;
 }

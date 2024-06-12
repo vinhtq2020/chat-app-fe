@@ -1,10 +1,8 @@
-import { useRouter } from "next/router";
 import { Locale, localeConfig } from "../utils/resource/locales";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 
 export default function useTrans() {
-  const router = useRouter();
-  const pathname = router.pathname;
+  const pathname = usePathname();
 
   const currentLanguage = (): Locale => {
     const segments = pathname.split("/");
@@ -32,7 +30,7 @@ export default function useTrans() {
   };
 
   const changeLanguage = (locale: Locale) => {
-    router.push(redirectedPathname(locale));
+    redirect(redirectedPathname(locale));
   };
 
   return {

@@ -28,12 +28,3 @@ export interface Account {
   email?: string;
   phone?: string;
 }
-
-export interface UserInfo {
-  id?: string;
-  username: string;
-  email?: string;
-  student?: string;
-  address?: string;
-  avatar?: string;
-}

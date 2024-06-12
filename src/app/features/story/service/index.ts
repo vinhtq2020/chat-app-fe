@@ -1,11 +1,25 @@
-import { Story, StoryService } from "../story";
+import { Story, StoryFilter, StoryService } from "../story";
 
 export class StoryClient implements StoryService {
   constructor() {
-    this.getStories = this.getStories.bind(this);
+    this.getPosts = this.getPosts.bind(this);
+    this.delay = this.delay.bind(this);
   }
 
-  getStories():Story[] {
-    return []
+  async getPosts(filter: StoryFilter): Promise<Story[]> {
+    await this.delay(1000);
+    return [{},{},{},{}];
   }
+  delay(t: number) {
+    return new Promise((resolve) => setTimeout(resolve, t));
+  }
+}
+
+let storyService = new StoryClient();
+
+export function getStoryService(): StoryService {
+  if (storyService == null) {
+    storyService = new StoryClient();
+  }
+  return storyService;
 }

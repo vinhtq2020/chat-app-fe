@@ -12,7 +12,7 @@ export const CommentComponent = ({ comment }: Props) => {
       <div className="flex flex-shrink-0 shadow-md items-center justify-center h-12 w-12 rounded-full bg-[--color-glass-200] border border-t-[--color-glass-500] border-l-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200]">
         <img
           className="h-full w-full rounded-full border-2 border-white"
-          src={comment.owner.avatar ?? avatarDefault}
+          src={comment.owner.avatarURL ?? avatarDefault}
           alt={comment.owner.username}
           srcSet={avatarDefault ?? avatarDefault}
         />

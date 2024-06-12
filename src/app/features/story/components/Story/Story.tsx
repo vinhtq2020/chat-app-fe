@@ -1,16 +1,18 @@
 "use client";
 
-import { Author, Story } from "../../story";
+import useTrans from "@/src/app/hooks/useTrans";
+import { Story } from "../../story";
 import StoryDetailComponent from "../StoryDetail/StoryDetail";
-import { timeSince, useDate } from "@/src/app/hooks/useDate";
+import { useDate } from "@/src/app/hooks/useDate";
 
 interface Props {
    story: Story
 }
 
 export const StoryComponent = (props: Props) => {
+  const {timeSince} = useDate() 
   return (
-    <div className="relative max-h-[400px] w-1/2 mx-auto bg-[--color-glass-100] rounded-lg p-4 shadow-lg border border-l-[--color-glass-500] backdrop-blur-md border-t-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200]">
+    <div className="min-w-[400px] relative max-h-[400px] w-1/2 mx-auto bg-[--color-glass-100] rounded-lg p-4 shadow-lg border border-l-[--color-glass-500] backdrop-blur-md border-t-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200]">
       <div className="inline-flex flex-row gap-2 min-w-[200px] bg-[--color-glass-200] rounded-full p-2 border shadow-md border-t-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200]">
         <div className="flex shadow-md items-center justify-center h-12 w-12 rounded-full bg-[--color-glass-200] border border-t-[--color-glass-500] border-l-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200]">
           <img
@@ -22,7 +24,7 @@ export const StoryComponent = (props: Props) => {
         </div>
         <div className="flex flex-col tracking-wide text-black text-sm my-auto">
           <span className="font-bold">{props.story?.author?.username}</span>
-          <span>{timeSince(props.story?.createdAt ?? new Date())}</span>
+          <span>{timeSince(props.story?.createdAt ?? new Date() )}</span>
         </div>
       </div>
       <StoryDetailComponent content="" />
