@@ -20,6 +20,9 @@
 }
 
 body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
   font-family: "Poppins", sans-serif;
   color: rgb(var(--foreground-rgb));
   background-image: url("https://blogs.windows.com/wp-content/uploads/prod/sites/2/2021/10/Windows-11-Bloom-Screensaver-Dark-scaled.jpg");
@@ -35,7 +38,8 @@ body {
     #ff359b,
     #fffd87
   ); */
-  height: 100vh;
+  min-height: 100vh;
+  overflow: auto;
 }
 
 @layer base {

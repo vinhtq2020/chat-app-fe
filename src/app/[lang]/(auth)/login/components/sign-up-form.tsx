@@ -1,11 +1,12 @@
 import { ChangeEvent, useContext, useRef, useState } from "react"
 
-import { ValidateErrors } from "../../../utils/validate/model"
-import { AlertContext } from "../../../components/Providers"
-import { showAlert } from "../../../components/Toast/Toast"
-import { ResponseError } from "../../../utils/exception/model/response"
-import { Account } from "../../../features/auth/auth"
+
 import { register } from "@/src/app/features/auth/actions"
+import { AlertContext } from "@/src/app/components/Providers"
+import { showAlert } from "@/src/app/components/Toast/Toast"
+import { ValidateErrors } from "@/src/app/utils/validate/model"
+import { ResponseError } from "@/src/app/utils/exception/model/response"
+import { Account } from "@/src/app/features/auth/auth"
 
 export interface Props {
     onRegisterSuccess: () => void

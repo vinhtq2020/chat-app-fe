@@ -23,7 +23,6 @@ export default function Header() {
       });
   };
   return (
-    <>
       <nav className="z-10 sm:hidden md:flex flex-row justify-around h-14 sticky bg-transparent top-0 shadow-md items-center w-screen">
         <div className=""></div>
           <SearchBar
@@ -52,6 +51,5 @@ export default function Header() {
           </button>
         </div>
       </nav>
-    </>
   );
 }

@@ -10,7 +10,6 @@ interface AppPath {
 const publicRoutes = ["/auth", ""];
 const protectedRoutes = ["/home", "/chat", "/profile", ""];
 
-
 function mapPath(request: NextRequest): Partial<AppPath> | undefined {
   const regex = new RegExp(
     "^\\/(?<locale>[a-z]{2})(\\/|((?<page>\\/[a-z0-9-_]+)(\\/|(?<subPage>\\/.+))?))?$",
@@ -55,7 +54,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(request.nextUrl);
   }
 
-  let localePath = localeConfig.locales.find((locale) => appPath?.locale === locale);
+  let localePath = localeConfig.locales.find(
+    (locale) => appPath?.locale === locale
+  );
 
   const isProtectedRoute = protectedRoutes.includes(appPath.page ?? "");
   const isPublicRoutes = publicRoutes.includes(appPath.page ?? "");
@@ -77,25 +78,14 @@ export async function middleware(request: NextRequest) {
       switch (pathname) {
         case `/${localePath}`:
           return NextResponse.rewrite(
-            new URL(`/${localePath}/auth`, request.url)
+            new URL(`/${localePath}/login`, request.url)
           );
-        case `/${localePath}/auth`:
-          
-          return NextResponse.redirect(new URL(`/${localePath}`, request.url));
-        case `/${localePath}/home`:
-          return NextResponse.redirect(new URL(`/${localePath}`, request.url));
         default:
           return NextResponse.redirect(new URL(`/${localePath}`, request.url));
       }
     } else {
       // is Login
       switch (pathname) {
-        case `/${localePath}`:
-          return NextResponse.rewrite(
-            new URL(`/${localePath}/home`, request.url)
-          );
-        case `/${localePath}/auth`:
-          return NextResponse.redirect(new URL(`/${localePath}`, request.url));
         default:
           return NextResponse.next();
       }
@@ -106,7 +96,7 @@ export async function middleware(request: NextRequest) {
     switch (pathname) {
       case `/${localePath}`:
         return NextResponse.rewrite(
-          new URL(`/${localePath}/auth`, request.url)
+          new URL(`/${localePath}/login`, request.url)
         );
       case `/${localePath}/auth`:
         return NextResponse.redirect(new URL(`/${localePath}`, request.url));

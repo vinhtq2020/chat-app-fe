@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import "../globals.css";
-import { Providers } from "../components/Providers";
-import AlertModal from "../components/Toast/Toast";
-import { Resource } from "../utils/resource/resourse";
+import "../../../globals.css";
 import { Suspense } from "react";
-import Loading from "./home/loading";
+import Loading from "./loading";
+import { Resource } from "@/src/app/utils/resource/resourse";
+import { Providers } from "@/src/app/components/Providers";
+import AlertModal from "@/src/app/components/Toast/Toast";
+
 
 // const inter = Inter({ subsets: ['latin'] })
 
