@@ -1,8 +1,16 @@
-"use sever";
+"use server";
 
-import { SuggestionSearchItem } from "../search";
+import { SearchResult, SuggestionSearchItem } from "../search";
 import { getSuggestionSearchService } from "../service";
 
-export function search(q: string): Promise<SuggestionSearchItem[] | number>{
-    return getSuggestionSearchService().search(q)
+export async function search(
+  q: string
+): Promise<SearchResult<SuggestionSearchItem>> {
+//   return getSuggestionSearchService().search(q);
+return new Promise<SearchResult<SuggestionSearchItem>>((v)=>{
+    return {
+        list: [],
+        total: 0,
+    }
+})
 }

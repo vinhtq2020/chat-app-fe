@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse, userAgent } from "next/server";
 import { localeConfig } from "./app/utils/resource/locales";
+import { Resource } from "./app/utils/resource/resourse";
 
 interface AppPath {
   locale?: string;
@@ -8,7 +9,7 @@ interface AppPath {
 }
 
 const publicRoutes = ["/auth", ""];
-const protectedRoutes = ["/home", "/chat", "/profile", ""];
+const protectedRoutes = ["/home", "/chat", "/profile", "","/search"];
 
 function mapPath(request: NextRequest): Partial<AppPath> | undefined {
   const regex = new RegExp(
@@ -24,32 +25,37 @@ function mapPath(request: NextRequest): Partial<AppPath> | undefined {
   return res.groups;
 }
 
-function getBrowserLanguage(request: NextRequest) {
-  return request.headers
-    .get("accept-language")
-    ?.split(",")
-    .map((i) => i.split(";"))
-    ?.reduce(
-      (ac: { code: string; priority: string }[], lang) => [
-        ...ac,
-        {
-          code: lang[0],
-          priority: lang[1],
-        },
-      ],
-      []
-    )
-    ?.sort((a, b) => (a.priority > b.priority ? -1 : 1))
-    ?.find((i) => localeConfig.locales.includes(i.code.substring(0, 2)))
-    ?.code?.substring(0, 2);
-}
+// function getBrowserLanguage(request: NextRequest) {
+//   return request.headers
+//     .get("accept-language")
+//     ?.split(",")
+//     .map((i) => i.split(";"))
+//     ?.reduce(
+//       (ac: { code: string; priority: string }[], lang) => [
+//         ...ac,
+//         {
+//           code: lang[0],
+//           priority: lang[1],
+//         },
+//       ],
+//       []
+//     )
+//     ?.sort((a, b) => (a.priority > b.priority ? -1 : 1))
+//     ?.find((i) => localeConfig.locales.includes(i.code.substring(0, 2)))
+//     ?.code?.substring(0, 2);
+// }
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  console.log("pathname:", pathname);
+  
   const appPath = mapPath(request);
+  console.log(appPath);
 
   if (!appPath || !appPath.locale) {
-    const locale = getBrowserLanguage(request) ?? localeConfig.defaultLocale;
+    
+    // const locale = getBrowserLanguage(request) ?? Resource.getLocale();
+    const locale = Resource.getLocale()
     request.nextUrl.pathname = `/${locale}${pathname}`;
     return NextResponse.redirect(request.nextUrl);
   }
@@ -137,5 +143,6 @@ export const config = {
     "/([a-z0-9]{2})/home",
     "/([a-z0-9]{2})/chat",
     "/([a-z0-9]{2})/profile",
+    "/([a-z0-9]{2})/search",
   ],
 };

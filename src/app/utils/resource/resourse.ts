@@ -1,7 +1,8 @@
-import {  getDictionary } from "./locales"
+import {  Locale, getDictionary, localeConfig } from "./locales"
 import { Session } from "./session/session"
 
 export class Resource {
+    private static locale: Locale = localeConfig.defaultLocale
     private static session: Session = {
         
     }
@@ -49,5 +50,12 @@ export class Resource {
 
     static setUserId(userId: string): void {
         this.session.userId = userId
+    }
+
+    static setLocale(locale:Locale): void {
+        this.locale = locale
+    }
+    static getLocale(): Locale {
+        return this.locale
     }
 }

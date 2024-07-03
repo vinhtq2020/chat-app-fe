@@ -6,6 +6,11 @@ export interface SuggestionSearchItem {
   name?: string;
 }
 
-export interface SuggestionSearchService {
-  search(q: string): Promise<SuggestionSearchItem[] | number>;
+export interface SearchResult<T> {
+  list: T[]
+  total: number
+}
+
+export interface SuggestionSearchService<T> {
+  search(q: string): Promise<SearchResult<T>>;
 }

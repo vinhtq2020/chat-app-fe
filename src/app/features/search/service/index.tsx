@@ -1,14 +1,14 @@
 import { HttpService, httpInstance } from "@/src/app/utils/http/http-default";
-import { SuggestionSearchItem, SuggestionSearchService } from "../search";
+import { SearchResult, SuggestionSearchItem, SuggestionSearchService } from "../search";
 import { config } from "@/src/app/config";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
 
-export class SuggestionSearchClient implements SuggestionSearchService {
+export class SuggestionSearchClient<T> implements SuggestionSearchService<T> {
     private search_url = config.search_url 
     constructor(private http: HttpService){
         this.search =this.search.bind(this)
     }
-    async search(q: string): Promise<number | SuggestionSearchItem[]> {
+    async search<T>(q: string): Promise<SearchResult<T>> {
         try {
             const res = await this.http.get(`${this.search_url}`)
             const response = await res.json()

@@ -1,5 +1,7 @@
 "use client";
 
+import { Resource } from "@/src/app/utils/resource/resourse";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 interface Props {
@@ -15,24 +17,67 @@ const initialState: InternalState = {
 };
 export default function PhoneSearchBar(props: Props) {
   const [state, setState] = useState(initialState);
-  
+  const router = useRouter();
+
   const onChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
+    e.preventDefault();
+
     setState((prev) => ({
-      ...prev, searchText: e.target.value
-    }))
-  }
+      ...prev,
+      searchText: e.target.value,
+    }));
+  };
+
+  const onSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const searchParams = new URLSearchParams({
+      q: state.searchText,
+    });
+    const searchUrl = `/${Resource.getLocale()}/search?${searchParams.toString()}`    
+    router.push(searchUrl);
+  };
+
+
   return (
     !props.hidden && (
       <div className="flex flex-col-reverse gap-2 min-w-64 items-center p-1">
-        <form>
+        <form className="flex flex-row z-50 px-2 py-1 outline-none rounded-full bg-white text-black border gap-2 items-center">
           <input
             type="text"
-            className="z-50 px-2 py-1 outline-none rounded-full bg-white text-black border "
-            placeholder="search something here ..."
+            className="h-full outline-none flex-1"
+            placeholder="Search something here ..."
             value={state.searchText}
-            onChange={(e)=>onChangeSearchInput(e)}
+            onChange={(e) => onChangeSearchInput(e)}
+            
           />
+          <button
+            type="submit"
+            className="flex justify-center items-center"
+            onClick={(e) => onSearch(e)}
+          >
+            <div className="flex items-center rounded-full justify-center p-1 shadow-md ml-1 w-8">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-2 h-full w-full stroke-blue-300"
+              >
+                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+          </button>
         </form>
         <div
           className={`flex flex-col bg-white rounded-2xl overflow-auto border h-64 w-full p-2 ${

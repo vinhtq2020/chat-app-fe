@@ -1,25 +1,23 @@
+"use client"
 import { search } from "@/src/app/features/story/action";
+import Loading from "@/src/app/features/story/components/Story/Loading";
 import { StoryComponent } from "@/src/app/features/story/components/Story/Story";
 import { StoryPost } from "@/src/app/features/story/components/StoryPost/StoryPost";
-import { getStoryService } from "@/src/app/features/story/service";
 import { Story } from "@/src/app/features/story/story";
-import { fetchData } from "next-auth/client/_utils";
-import { lazy, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
+export const Body = () => {
+  const [posts, setPosts] = useState<Story[]>([])
 
-export const Body = async () => {
-
-  const posts = await search({});
-  // setState((prevState) => ({
-  //   ...prevState,
-  //   stories: posts,
-  // }));
+  useEffect(() => {
+    search({}).then((val) => setPosts(val))
+  },[])
 
   return (
     <div className="mx-auto flex flex-col gap-4">
-      <StoryPost/>
-      {posts &&
-        posts.map((item) => <StoryComponent key={item.id} story={item} />)}
+      <StoryPost />
+      { posts &&
+            posts.map((item) => <div key={item.id}><Suspense fallback={<Loading/>}><StoryComponent story={item} /></Suspense></div>)}
     </div>
   );
 };

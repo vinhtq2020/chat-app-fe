@@ -8,7 +8,7 @@ export class StoryClient implements StoryService {
 
   async getPosts(filter: StoryFilter): Promise<Story[]> {
     await this.delay(1000);
-    return [{},{},{},{}];
+    return [{id:"1"},{id:"2"},{id:"3"},{id:"4"}];
   }
   delay(t: number) {
     return new Promise((resolve) => setTimeout(resolve, t));

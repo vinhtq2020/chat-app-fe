@@ -4,7 +4,6 @@ import { Providers } from "../../components/Providers";
 import { Metadata } from "next";
 import Loading from "./loading";
 import "../../globals.css";
-import dynamic from "next/dynamic";
 import Header from "./components/Header/Header";
 import BottomBar from "./components/BottomBar/BottomBar";
 
