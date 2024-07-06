@@ -47,10 +47,8 @@ function mapPath(request: NextRequest): Partial<AppPath> | undefined {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  console.log("pathname:", pathname);
   
   const appPath = mapPath(request);
-  console.log(appPath);
 
   if (!appPath || !appPath.locale) {
     

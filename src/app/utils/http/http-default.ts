@@ -99,9 +99,18 @@ export class HttpService {
   }
 }
 
-export const httpInstance = new HttpService({
+let httpInstance = new HttpService({
   timeout: 30000,
 });
+
+export function  getHTTPService(): HttpService {
+  if(!httpInstance) {
+    httpInstance = new HttpService({
+      timeout: 30000,
+    });
+  }
+  return httpInstance
+} 
 
 httpInstance.interceptors.response.use(async (response, url, options) => {
   if (response.status == 401) {

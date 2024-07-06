@@ -1,8 +1,7 @@
 "use client";
 
-import useTrans from "@/src/app/hooks/useTrans";
 import { Story } from "../../story";
-import StoryDetailComponent from "../StoryDetail/StoryDetail";
+import StoryDetailComponent from "./StoryDetail";
 import { useDate } from "@/src/app/hooks/useDate";
 
 interface Props {

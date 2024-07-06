@@ -1,16 +1,9 @@
 "use server";
 
-import { SearchResult, SuggestionSearchItem } from "../search";
-import { getSuggestionSearchService } from "../service";
+import { list } from "postcss";
+import { SearchResult, SearchItem } from "../search";
+import { getSearchService, getSuggestionSearchService } from "../service";
 
-export async function search(
-  q: string
-): Promise<SearchResult<SuggestionSearchItem>> {
-//   return getSuggestionSearchService().search(q);
-return new Promise<SearchResult<SuggestionSearchItem>>((v)=>{
-    return {
-        list: [],
-        total: 0,
-    }
-})
+export async function search(q: string): Promise<SearchResult<SearchItem>> {
+    return getSearchService().search(q);
 }

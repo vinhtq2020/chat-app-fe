@@ -1,10 +1,13 @@
-export interface SuggestionSearchItem {
-  q: string;
-  type: "query" | "user";
+export interface SearchItem {
+  type?: "user";
   avatarURL?: string;
   id?: string;
   name?: string;
+  description?:string;
+  friendStatus?: FriendStatus;
 }
+
+type FriendStatus = "none" | "friended" | "pending"
 
 export interface SearchResult<T> {
   list: T[]
@@ -12,5 +15,9 @@ export interface SearchResult<T> {
 }
 
 export interface SuggestionSearchService<T> {
+  search(q: string): Promise<SearchResult<T>>;
+}
+
+export interface SearchService<T> {
   search(q: string): Promise<SearchResult<T>>;
 }

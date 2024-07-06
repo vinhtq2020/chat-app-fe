@@ -23,7 +23,7 @@ export default function RootLayout({
   // const BottomBar = dynamic(()=> import("./components/BottomBar/BottomBar"),{ssr: false})
   return (
     <html lang="en">
-      <body>
+      <body suppressHydrationWarning >
         <Providers>
           <Header />
           <div className="w-full flex flex-row justify-between gap-4 p-4 h-[calc(100%-56px)]">
