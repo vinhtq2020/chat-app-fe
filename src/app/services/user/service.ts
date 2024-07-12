@@ -1,7 +1,7 @@
-import { BaseSearchServiceImpl } from "../base/search/service";
+import { BaseSearchClient } from "../base/search/client";
 import { User, UserFilter } from "./user";
 
-export class UserSearchService extends BaseSearchServiceImpl<User, UserFilter> implements UserSearchService {
+export class UserSearchService extends BaseSearchClient<User, UserFilter> implements UserSearchService {
     constructor(url: string){
         super(url)
     }

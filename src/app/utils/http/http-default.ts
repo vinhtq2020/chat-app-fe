@@ -1,10 +1,8 @@
-import { getAuthService } from "../../features/auth/service";
 import { METHOD } from "./method";
 import { Interceptors } from "./interceptor";
-import { getDeviceId } from "../auth";
-import { use } from "react";
-import { userAgent } from "next/server";
-import { Resource } from "../resource/resourse";
+import { ContentType, HeaderType } from "./headers";
+import { ResponseError } from "../exception/model/response";
+import { HttpResponse } from "./response";
 
 interface HttpDefault {
   timeout: number;
@@ -39,7 +37,7 @@ export class HttpService {
     }, timeout);
   }
 
-  private async sendRequest(url: string, options: RequestInit) {
+  private async sendRequest<T>(url: string, options: RequestInit): Promise<HttpResponse<T>> {
     let mergeOptions = { ...this.baseRequestInit, ...options };
     if (this.interceptors.request.config) {
       const configInterceptor = this.interceptors.request.config(options);
@@ -51,103 +49,77 @@ export class HttpService {
       //     return fetch(url, mergeOptions)
       // })
       console.log("refreshing ...");
-      return new Promise<Response>((resolve, reject) => {
+      return new Promise<HttpResponse<T>>((_, reject) => {
         reject("token is refreshing");
       }).finally(() => clearTimeout(this.requestTimeout));
     } else {
       const res = await fetch(url, mergeOptions).finally(() =>
         clearTimeout(this.requestTimeout)
       );
-      return this.handleResponse(res, url, options);
+      return this.handleResponse<T>(res, url, options);
     }
   }
 
-  private async handleResponse(
-    response: Response,
+  private async handleResponse<T>(
+    res: Response,
     url: string,
     options: RequestInit
-  ) {
-    if (this.interceptors.response.onIntercepterResponse) {
-      return this.interceptors.response.onIntercepterResponse(
-        response,
-        url,
-        options
-      );
+  ): Promise<HttpResponse<T>> {
+    try {
+      if (this.interceptors.response.onIntercepterResponse) {
+        res = await this.interceptors.response.onIntercepterResponse(
+          res,
+          url,
+          options
+        );
+      }
+      let contentType = res.headers.get(HeaderType.contentType);
+      if (contentType == null) {
+        contentType = ContentType.textPlain;
+      }
+
+      if (ContentType.isJson(contentType)) {
+        let response = await res.json();
+        if (!res.ok) {
+          switch (res.status) {
+            case 422:
+              throw new ResponseError(res.statusText, res.status, response);
+            default:
+              throw new ResponseError(res.statusText, res.status, null);
+          }
+        }
+        response = response as T;
+        return {
+          body: response,
+          headers: res.headers,
+        };
+      } else {
+        const errMessage = await res.text();
+        throw new ResponseError(errMessage, res.status, null);
+      }
+    } catch (error) {
+      throw error;
     }
-    return response;
   }
 
-  get(url: string, options?: RequestInit): Promise<Response> {
+  get<T>(url: string, options?: RequestInit): Promise<HttpResponse<T>> {
     options = { ...this.baseRequestInit, ...options };
-    return this.sendRequest(url, { ...options, method: METHOD.GET });
+    return this.sendRequest<T>(url, { ...options, method: METHOD.GET });
   }
-  post(url: string, options?: RequestInit): Promise<Response> {
+  post<T>(url: string, options?: RequestInit): Promise<HttpResponse<T>> {
     options = { ...this.baseRequestInit, ...options };
-    return this.sendRequest(url, { ...options, method: METHOD.POST });
+    return this.sendRequest<T>(url, { ...options, method: METHOD.POST });
   }
-  put(url: string, options?: RequestInit): Promise<Response> {
+  put<T>(url: string, options?: RequestInit): Promise<HttpResponse<T>> {
     options = { ...this.baseRequestInit, ...options };
-    return this.sendRequest(url, { ...options, method: METHOD.PUT });
+    return this.sendRequest<T>(url, { ...options, method: METHOD.PUT });
   }
-  patch(url: string, options?: RequestInit): Promise<Response> {
+  patch<T>(url: string, options?: RequestInit): Promise<HttpResponse<T>> {
     options = { ...this.baseRequestInit, ...options };
-    return this.sendRequest(url, { ...options, method: METHOD.PATCH });
+    return this.sendRequest<T>(url, { ...options, method: METHOD.PATCH });
   }
-  delete(url: string, options?: RequestInit): Promise<Response> {
+  delete<T>(url: string, options?: RequestInit): Promise<HttpResponse<T>> {
     options = { ...this.baseRequestInit, ...options };
-    return this.sendRequest(url, { ...options, method: METHOD.DELETE });
+    return this.sendRequest<T>(url, { ...options, method: METHOD.DELETE });
   }
 }
-
-let httpInstance = new HttpService({
-  timeout: 30000,
-});
-
-export function  getHTTPService(): HttpService {
-  if(!httpInstance) {
-    httpInstance = new HttpService({
-      timeout: 30000,
-    });
-  }
-  return httpInstance
-} 
-
-httpInstance.interceptors.response.use(async (response, url, options) => {
-  if (response.status == 401) {
-    const deviceId = getDeviceId();
-    const ua = Resource.getUserAgent() ?? "";
-    getAuthService()
-      .getIP()
-      .then(async (res) => {
-        if (
-          deviceId.length == 0 ||
-          userAgent == undefined ||
-          userAgent.length == 0 ||
-          res.ip.length == 0
-        ) {
-          Promise.reject(
-            new Response(undefined, { status: 400, statusText: "Bad Request" })
-          );
-        }
-        return getAuthService()
-          .refresh(deviceId, res.ip, ua!)
-          .then((res) => {
-            if (res == 1) {
-              return httpInstance.get(url, options);
-            } else {
-              Promise.reject(
-                new Response(undefined, {
-                  status: 400,
-                  statusText: "Bad Request",
-                })
-              );
-            }
-          })
-          .catch((e) => {
-            throw e;
-          });
-      })
-      .finally(() => (httpInstance.isRefreshing = false));
-  }
-  return response;
-});

@@ -1,6 +1,5 @@
 "use server"
 
-import { getAuthService } from "../service"
 import { InputValidate, useSchemaItem } from "../../../utils/validate/validate"
 import { Account } from "../auth"
 import { ValidateErrors } from "../../../utils/validate/model"
@@ -8,6 +7,7 @@ import { Error422Message, ResponseError } from "../../../utils/exception/model/r
 import { cookies } from "next/headers"
 import { getDeviceId, getIP } from "../../../utils/auth"
 import { removeCookies, storeCookies } from "../../../action"
+import { useAuthService } from "@/src/app/core/context"
 
 type RegisterActionResult = number | ValidateErrors
 
@@ -26,7 +26,7 @@ export async function register(user: Account): Promise<RegisterActionResult> {
     }
 
     try {
-        const res = await getAuthService().register(user)
+        const res = await useAuthService().register(user)
         return res
     } catch (e: any) {
         if (e instanceof ResponseError) {
@@ -64,7 +64,7 @@ export async function login(email: string, password: string, userAgent: string):
     try {
         const ip = await getIP()
         const deviceId = getDeviceId()
-        const res = await getAuthService().login(email, password, userAgent, ip, deviceId)
+        const res = await useAuthService().login(email, password, userAgent, ip, deviceId)
         return 1
     } catch (e) {
         
@@ -77,13 +77,13 @@ export async function login(email: string, password: string, userAgent: string):
 export async function logout(userAgent: string): Promise<number> {
     try {
         const deviceId = getDeviceId()
-        const ip = (await getAuthService().getIP()).ip
+        const ip = (await useAuthService().getIP()).ip
 
         if (deviceId.length == 0 || ip.length == 0 || userAgent.length == 0 || ip.length == 0) {
             return -1
         }
 
-        const res = await getAuthService().logout(deviceId, ip, userAgent)
+        const res = await useAuthService().logout(deviceId, ip, userAgent)
         if (res > 0) {
             await removeCookies()
         }

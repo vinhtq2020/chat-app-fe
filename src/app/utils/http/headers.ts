@@ -1,7 +1,7 @@
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies"
 import { cookies } from "next/headers"
 
-export class Headers {
+export class HeaderType {
     static contentType = "Content-Type"
     static deviceId = "Device-Id"
     static userAgent = "User-Agent"
@@ -64,13 +64,13 @@ export interface StoreRequestCookie {
     userId?: Cookie;
 
 }
-export const getSetCookieFromResponse = (response: Response) => {
+export const getSetCookieFromResponse = (headers: Headers) => {
     let tokenObject: StoreRequestCookie = {
         accessToken: undefined,
         userId: undefined,
         refreshToken: undefined,
     }
-    response.headers.getSetCookie().forEach(item => {
+    headers.getSetCookie().forEach(item => {
 
         const props = item.split(";")
         if (props.length > 1) {

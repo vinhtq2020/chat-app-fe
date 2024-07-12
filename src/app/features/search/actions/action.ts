@@ -1,9 +1,8 @@
 "use server";
 
-import { list } from "postcss";
 import { SearchResult, SearchItem } from "../search";
-import { getSearchService, getSuggestionSearchService } from "../service";
+import { useSearchService } from "@/src/app/core/context";
 
 export async function search(q: string): Promise<SearchResult<SearchItem>> {
-    return getSearchService().search(q);
+    return useSearchService().search(q);
 }

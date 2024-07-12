@@ -8,8 +8,8 @@ export interface Error422Message {
 export class ResponseError extends Error {
     status: number;
     body: any;
-    constructor(message: string, status: number, body: any) {
-        super(message)
+    constructor(message: string | null, status: number, body: any) {
+        super(message ?? "")
         this.body = body
         this.status = status
     }

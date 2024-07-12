@@ -1,8 +1,9 @@
 export interface Filter {
-    limit?: number
-    q?: string
-    page?: number
-    sort?: string
+    size?: number;
+    limit?: number;
+    sort?: string;
+    q?: string;
+    page?: number;
 }
 
 export interface BaseSearchService<T,F> {
