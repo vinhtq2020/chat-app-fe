@@ -1,3 +1,5 @@
+import { Cookie } from "../../utils/http/headers";
+
 export interface AuthService {
   login(
     email: string,
@@ -9,7 +11,7 @@ export interface AuthService {
   register(user: Account): Promise<number>;
   logout(deviceId: string, ip: string, userAgent: string): Promise<number>;
   getIP(): Promise<{ ip: string }>;
-  refresh(deviceId: string, ip: string, userAgent: string): Promise<number>;
+  refresh(deviceId: string, ip: string, userAgent: string): Promise<Cookie|undefined>;
 }
 
 export interface Token {

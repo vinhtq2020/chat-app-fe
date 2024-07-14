@@ -58,14 +58,14 @@ export class PassportKeys {
 /**
  * cookies store in browser 
  */
-export interface StoreRequestCookie {
+export interface StoreRequestCookies {
     accessToken?: Cookie
     refreshToken?: Cookie
     userId?: Cookie;
 
 }
 export const getSetCookieFromResponse = (headers: Headers) => {
-    let tokenObject: StoreRequestCookie = {
+    let tokenObject: StoreRequestCookies = {
         accessToken: undefined,
         userId: undefined,
         refreshToken: undefined,
@@ -78,7 +78,7 @@ export const getSetCookieFromResponse = (headers: Headers) => {
 
             if (Object.hasOwn(tokenObject, propsPart[0])) {
 
-                const key = propsPart[0] as keyof StoreRequestCookie
+                const key = propsPart[0] as keyof StoreRequestCookies
                 const cookieItem: Cookie = {
                     value: propsPart[1]
                 }
@@ -104,18 +104,13 @@ export const getSetCookieFromResponse = (headers: Headers) => {
 }
 
 export const getCookieHeader = () => {
-    Object.keys(PassportKeys).forEach((item) => {
-        const key = cookies().get(item)
-
-    })
-
     let cookieHeader = ""
     cookies().getAll().filter(item => item.name == PassportKeys.accessToken || item.name == PassportKeys.userId).forEach(item => {
-        cookieHeader += parseCookietoString(item)
+        cookieHeader += parseCookieToString(item)
     })
     return cookieHeader
 }
 
-const parseCookietoString = (cookie: RequestCookie) => {
+const parseCookieToString = (cookie: RequestCookie) => {
     return cookie.name + "=" + cookie.value + ";"
 }

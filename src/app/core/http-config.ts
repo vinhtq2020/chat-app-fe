@@ -3,6 +3,7 @@ import { HttpService } from "../utils/http/http-default";
 import { userAgent } from "next/server";
 import { Resource } from "../utils/resource/resourse";
 import { useAuthService } from "./context";
+import { storeCookies } from "../action";
 
 let httpInstance = new HttpService({
   timeout: 30000,
@@ -28,7 +29,8 @@ httpInstance.interceptors.response.use(async (response, url, options) => {
         return useAuthService()
           .refresh(deviceId, res.ip, ua!)
           .then((res) => {
-            if (res == 1) {
+            if (res) {
+              storeCookies({accessToken: res})
               return httpInstance.get(url, options);
             } else {
               Promise.reject(

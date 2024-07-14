@@ -5,6 +5,7 @@ import Loading from "./loading";
 import { Resource } from "@/src/app/utils/resource/resourse";
 import { Providers } from "@/src/app/components/Providers";
 import AlertModal from "@/src/app/components/Toast/Toast";
+import { LoadingScreen } from "@/src/app/components/LoadingScreen/LoadingScreen";
 
 
 // const inter = Inter({ subsets: ['latin'] })
@@ -22,13 +23,15 @@ export default async function RootLayout({
   Resource.setUserAgent(navigator.userAgent);
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body>
         <Providers>
           <Suspense fallback={<Loading/>}>
             {children}
             <div id="portal-modal"></div>
+            <div id="portal-loading"></div>
             <AlertModal />
+            <LoadingScreen/>
           </Suspense>
         </Providers>
       </body>

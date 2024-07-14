@@ -3,13 +3,16 @@ import { config } from "../../../config";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
 import {
   ContentType,
+  Cookie,
   HeaderType,
   PassportKeys,
+  StoreRequestCookies,
   getCookieHeader,
   getSetCookieFromResponse,
 } from "@/src/app/utils/http/headers";
 import { storeCookies } from "@/src/app/action";
 import { HttpService } from "@/src/app/utils/http/http-default";
+import { cookies } from "next/headers";
 
 export class AuthServiceClient implements AuthService {
   constructor(private httpInstance: HttpService, private auth_url: string) {
@@ -59,8 +62,7 @@ export class AuthServiceClient implements AuthService {
         }
       );
       const setCookies = getSetCookieFromResponse(res.headers);
-
-      storeCookies({
+      await storeCookies({
         accessToken: setCookies["accessToken"],
         refreshToken: setCookies["refreshToken"],
         userId: setCookies["userId"],
@@ -113,14 +115,16 @@ export class AuthServiceClient implements AuthService {
       throw err;
     }
   }
+
+  // Refresh access token when token expired. Used in middleware and interceptor http. So, cookie should be resolved in action or router handler
   async refresh(
     deviceId: string,
     ip: string,
     userAgent: string
-  ): Promise<number> {
+  ): Promise<Cookie | undefined> {
     try {
       const res = await this.httpInstance.get<number>(
-        `${this.auth_url}/register`,
+        `${this.auth_url}/refresh`,
         {
           headers: {
             [HeaderType.contentType]: ContentType.applicationJson,
@@ -134,11 +138,10 @@ export class AuthServiceClient implements AuthService {
       );
 
       const setCookies = getSetCookieFromResponse(res.headers);
-      storeCookies({
-        accessToken: setCookies["accessToken"],
-      });
-      return res.body
+      return setCookies.accessToken;
     } catch (err: unknown) {
+      console.log(err);
+
       throw err;
     }
   }

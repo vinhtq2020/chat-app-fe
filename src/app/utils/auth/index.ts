@@ -1,29 +1,9 @@
 import { cookies } from "next/headers"
 import { uuidv4 } from "../random/random"
-import { getAuthService } from "../../features/auth/service"
 import { Resource } from "../resource/resourse"
+import { useAuthService } from "../../core/context"
 
-/**
- * Check authentication from acess token and refresh token.
- */
-export const checkAuthentication = async (userAgent: string): Promise<boolean> => {
-    const accessToken = cookies().get("accessToken")
-    const userId = cookies().get("userId")
-    const refreshToken = cookies().get("refreshToken")
 
-    // refresh access token
-    if (refreshToken && accessToken == undefined) {
-        try {
-            const ip = await getIP()
-            const deviceId = getDeviceId()
-            const res = await getAuthService().refresh(deviceId, ip, userAgent)
-            return res > 0
-        } catch (e) {
-            throw e
-        }
-    }
-    return accessToken != undefined && refreshToken != undefined && userId != undefined
-}
 
 /**
  * Get Device ID for device. If It hasn't already existed, created new one.
@@ -48,7 +28,7 @@ export const getIP = async (): Promise<string> => {
     let ip = Resource.getIP()
     if (ip == undefined) {
         try {
-            const res = await getAuthService().getIP()
+            const res = await useAuthService().getIP()
             ip = res.ip
             Resource.setIP(res.ip)
         } catch (e) {

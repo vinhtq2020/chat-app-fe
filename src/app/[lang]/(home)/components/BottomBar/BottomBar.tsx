@@ -1,7 +1,12 @@
 "use client";
-import { useState } from "react";
-import PhoneSearchBar from "../PhoneSearchBar/PhoneSearchBar";
+import { use, useState } from "react";
 import Link from "next/link";
+import { logout } from "@/src/app/features/auth/actions";
+import { useRouter } from "next/navigation";
+import { AlertContext, LoadingContext } from "@/src/app/components/Providers";
+import { showAlert } from "@/src/app/components/Toast/Toast";
+import { ResponseError } from "@/src/app/utils/exception/model/response";
+import PhoneSearchBar from "../PhoneSearchBar/PhoneSearchBar";
 
 interface InternalState {
   showSearchBar: boolean;
@@ -13,13 +18,38 @@ const initialState = {
 
 export default function BottomBar() {
   const [state, setState] = useState<InternalState>(initialState);
+  const alertContext = use(AlertContext);
+  const loadingContext = use(LoadingContext);
+  const router = useRouter();
+  const onClickLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (loadingContext) {
+      loadingContext.isLoading = true;
+    }
+    logout(navigator.userAgent)
+      .then((res) => {
+        if (res > 0) {
+          router.refresh();
+        }
+      })
+      .catch((e: ResponseError) => {
+        showAlert(alertContext, e.name, e.message);
+      })
+      .finally(() => {
+        if (loadingContext) {
+          loadingContext.isLoading = true;          
+        }
+      });
+  };
   return (
     <div className="fixed z-50 inset-x-0 mx-auto md:hidden bottom-[64px] flex flex-col items-center">
       <div className="mb-4 mx-auto">
         <PhoneSearchBar hidden={!state.showSearchBar} />
       </div>
       <div className=" flex flex-row bg-white h-10 w-auto overflow-hidden shadow-md rounded-full p-1 gap-4 mx-auto ">
-      <Link href={"/"}><div className="rounded-full w-8 h-8 bg-blue-300 shadow-md "></div></Link>
+        <Link href={"/"}>
+          <div className="rounded-full w-8 h-8 bg-blue-300 shadow-md "></div>
+        </Link>
         <div
           className="rounded-full w-8 h-8 bg-red-300 shadow-md "
           onClick={() =>
@@ -56,6 +86,10 @@ export default function BottomBar() {
           className="rounded-full w-8 h-8 bg-yellow-300 shadow-md "
           href={"/chat"}
         ></Link>
+        <button
+          className="rounded-full w-8 h-8 bg-green-300 shadow-md "
+          onClick={(e) => onClickLogout(e)}
+        ></button>
       </div>
     </div>
   );

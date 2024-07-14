@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse, userAgent } from "next/server";
 import { localeConfig } from "./app/utils/resource/locales";
 import { Resource } from "./app/utils/resource/resourse";
+import { checkAuthentication, getNewAccessTokenAction } from "./app/action";
+import { Cookie, PassportKeys } from "./app/utils/http/headers";
+import { sources } from "next/dist/compiled/webpack/webpack";
 
 interface AppPath {
   locale?: string;
@@ -8,8 +11,8 @@ interface AppPath {
   subPage?: string;
 }
 
-const publicRoutes = ["/auth", ""];
-const protectedRoutes = ["/home", "/chat", "/profile", "","/search"];
+const publicRoutes = ["login", ""];
+const protectedRoutes = ["/chat", "/profile", "/search", ""];
 
 function mapPath(request: NextRequest): Partial<AppPath> | undefined {
   const regex = new RegExp(
@@ -47,13 +50,13 @@ function mapPath(request: NextRequest): Partial<AppPath> | undefined {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+  console.log("middleware");
+
   const appPath = mapPath(request);
 
   if (!appPath || !appPath.locale) {
-    
     // const locale = getBrowserLanguage(request) ?? Resource.getLocale();
-    const locale = Resource.getLocale()
+    const locale = Resource.getLocale();
     request.nextUrl.pathname = `/${locale}${pathname}`;
     return NextResponse.redirect(request.nextUrl);
   }
@@ -65,20 +68,48 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.includes(appPath.page ?? "");
   const isPublicRoutes = publicRoutes.includes(appPath.page ?? "");
 
+  const userAgent = request.headers.get("user-agent") ?? "";
+  let newAccessToken: Cookie | undefined = undefined;
+
   // check authentication
-  const browser = userAgent(request).browser.name ?? "";
-  let isLogin = false;
-  try {
-    // hard code
-    // isLogin = await checkAuthentication(browser);
-    isLogin = true;
-  } catch (error) {
-    isLogin = false;
+  let isAuthenticated = false;
+  const tmp = checkAuthentication();
+
+  switch (tmp) {
+    case "token_expired":
+      isAuthenticated = false;
+      break;
+    case "authenticated":
+      isAuthenticated = true;
+      break;
+    case "need_refresh":
+      isAuthenticated = await getNewAccessTokenAction(userAgent)
+        .then((res) => {
+          if (res) {
+            newAccessToken = res;
+            return true;
+          }
+          return false;
+        })
+        .catch((e) => {
+          console.log(e);
+
+          return false;
+        });
+      break;
   }
+
+  console.log(
+    tmp,
+    "is ProtectedRoute",
+    isProtectedRoute,
+    "is Authenticated",
+    isAuthenticated
+  );
 
   if (isProtectedRoute) {
     // is Not Login
-    if (!isLogin) {
+    if (!isAuthenticated) {
       switch (pathname) {
         case `/${localePath}`:
           return NextResponse.rewrite(
@@ -91,6 +122,15 @@ export async function middleware(request: NextRequest) {
       // is Login
       switch (pathname) {
         default:
+          // refresh token
+          if (newAccessToken) {
+            return storeCookieInMiddleware(
+              NextResponse.next(),
+              PassportKeys.accessToken,
+              newAccessToken
+            );
+          }
+
           return NextResponse.next();
       }
     }
@@ -112,6 +152,19 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
+function storeCookieInMiddleware(
+  response: NextResponse,
+  key: string,
+  cookie: Cookie
+): NextResponse {
+  response.cookies.set(key, cookie.value, {
+    httpOnly: cookie.httpOnly,
+    secure: cookie.secure,
+    expires: new Date(cookie.expires ?? ""),
+  });
+  return response;
+}
+
 export const config = {
   matcher: [
     {
@@ -119,28 +172,14 @@ export const config = {
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },
+        { type: "header", key: "next-action" },
       ],
     },
-
-    {
-      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
-      has: [
-        { type: "header", key: "next-router-prefetch" },
-        { type: "header", key: "purpose", value: "prefetch" },
-      ],
-    },
-
-    {
-      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
-      has: [{ type: "header", key: "x-present" }],
-      missing: [{ type: "header", key: "x-missing", value: "prefetch" }],
-    },
-
-    "/([a-z0-9]{2})/auth",
-    "/([a-z0-9]{2})/",
-    "/([a-z0-9]{2})/home",
-    "/([a-z0-9]{2})/chat",
-    "/([a-z0-9]{2})/profile",
-    "/([a-z0-9]{2})/search",
+    // "/([a-z0-9]{2})/login",
+    // "/([a-z0-9]{2})/",
+    // "/([a-z0-9]{2})",
+    // "/([a-z0-9]{2})/chat",
+    // "/([a-z0-9]{2})/profile",
+    // "/([a-z0-9]{2})/search",
   ],
 };

@@ -6,6 +6,7 @@ import {
   ReactNode,
   SetStateAction,
   createContext,
+  use,
   useState,
 } from "react";
 import { LocaleConfig, localeConfig } from "../../utils/resource/locales";
@@ -41,14 +42,24 @@ export interface InternalizationContext {
   changeLanguage: () => void;
 }
 
+/**
+ * State interface for Loading Screen Context
+ */
+
+export interface LoadingScreenContext {
+  isLoading: boolean;
+}
+
 export const AlertContext = createContext<AlertContext | undefined>(undefined);
+export const LoadingContext = createContext<LoadingScreenContext | undefined>(
+  undefined
+);
 export const InternalizationContext = createContext<
   InternalizationContext | undefined
 >(undefined);
 
 export const Providers = (props: Props) => {
   const [alertState, setAlertState] = useState<AlertState>();
-
   const changeLanguage = () => {};
 
   return (
@@ -60,7 +71,9 @@ export const Providers = (props: Props) => {
         }}
       >
         <AlertContext.Provider value={{ alertState, setAlertState }}>
-          {props.children}
+          <LoadingContext.Provider value={{isLoading: false}}>
+            {props.children}
+          </LoadingContext.Provider>
         </AlertContext.Provider>
       </InternalizationContext.Provider>
     </SessionProvider>
