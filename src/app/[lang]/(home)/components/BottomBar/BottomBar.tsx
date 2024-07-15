@@ -3,7 +3,7 @@ import { use, useState } from "react";
 import Link from "next/link";
 import { logout } from "@/src/app/features/auth/actions";
 import { useRouter } from "next/navigation";
-import { AlertContext, LoadingContext } from "@/src/app/components/Providers";
+import { AlertContext, LoadingScreenContext } from "@/src/app/components/Providers";
 import { showAlert } from "@/src/app/components/Toast/Toast";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
 import PhoneSearchBar from "../PhoneSearchBar/PhoneSearchBar";
@@ -19,7 +19,7 @@ const initialState = {
 export default function BottomBar() {
   const [state, setState] = useState<InternalState>(initialState);
   const alertContext = use(AlertContext);
-  const loadingContext = use(LoadingContext);
+  const loadingContext = use(LoadingScreenContext);
   const router = useRouter();
   const onClickLogout = (e: React.MouseEvent) => {
     e.preventDefault();

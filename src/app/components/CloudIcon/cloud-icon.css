@@ -1,0 +1,32 @@
+.cloud {
+}
+
+.cloud-child {
+  animation: cloud-rain 20s linear infinite;
+}
+
+.sun {
+  animation: sun-down 20s linear infinite;
+}
+
+.mail {
+}
+.mail-dot {
+
+}
+
+@keyframes cloud-rain {
+  0% {
+  }
+  50% {
+    background-color: rgb(78, 102, 105);
+  }
+}
+
+@keyframes sun-down {
+  0% {
+  }
+  50% {
+    transform: translateY(32px) scale(0);
+  }
+}

@@ -8,6 +8,7 @@ import { showAlert } from "@/src/app/components/Toast/Toast";
 import { AlertContext } from "@/src/app/components/Providers";
 import dynamic from "next/dynamic";
 import Loading from "../loading";
+import { ResponseError } from "@/src/app/utils/exception/model/response";
 
 const UserList = dynamic(() => import("./components/UserList"));
 
@@ -21,16 +22,16 @@ const SearchPage = () => {
       .then((result) => {
         setList(result.list);        
       })
-      .catch((error) => {
-        showAlert(alertContext, "error", error);
+      .catch((error: ResponseError) => {
+        showAlert(alertContext, error.message, error.body);
       });
-  }, []);
+  }, [params]);
 
   return (
     <div className="bg-transparent flex-1 rounded-lg flex sm:flex-col md:flex-row overflow-hidden gap-4 p-4 mx-auto w-3/4">
       <div className="">
         <h1 className="text-2xl font-bold text-white text-center">Search</h1>
-        {list && <Suspense fallback={<Loading/>}><UserList list={list} /></Suspense>}
+        {list && <UserList list={list} />}
       </div>
     </div>
   );

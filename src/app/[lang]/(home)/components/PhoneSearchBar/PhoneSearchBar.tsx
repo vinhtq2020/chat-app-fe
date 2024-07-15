@@ -33,7 +33,8 @@ export default function PhoneSearchBar(props: Props) {
     const searchParams = new URLSearchParams({
       q: state.searchText,
     });
-    const searchUrl = `/${Resource.getLocale()}/search?${searchParams.toString()}`    
+    
+    const searchUrl = `/${Resource.getLocale()}/search?${searchParams.toString()}`
     router.push(searchUrl);
   };
 
@@ -55,7 +56,7 @@ export default function PhoneSearchBar(props: Props) {
             className="flex justify-center items-center"
             onClick={(e) => onSearch(e)}
           >
-            <div className="flex items-center rounded-full justify-center p-1 shadow-md ml-1 w-8">
+            <div className="flex items-center rounded-full justify-center p-1 shadow-md ml-1 w-8 scroll-smooth">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -80,22 +81,16 @@ export default function PhoneSearchBar(props: Props) {
           </button>
         </form>
         <div
-          className={`flex flex-col bg-white rounded-2xl overflow-auto border h-64 w-full p-2 ${
+          className={`flex flex-col bg-white rounded-2xl overflow-auto border w-full p-2 overflow-y-clip ${
             state.searchText.length == 0 ? "hidden" : ""
           }`}
         >
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
-          <div className="h-8">test 1</div>
+          <div className="p-2">test 1</div>
+          <div className="p-2">test 1</div>
+          <div className="p-2">test 1</div>
+          <div className="p-2">test 1</div>
+          <div className="p-2">test 1</div>
+          <div className="p-2">test 1</div>
         </div>
       </div>
     )

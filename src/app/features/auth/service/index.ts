@@ -1,18 +1,13 @@
-import { AuthService, Token, Account } from "../auth";
-import { config } from "../../../config";
-import { ResponseError } from "@/src/app/utils/exception/model/response";
+import { AuthService, Account } from "../auth";
 import {
   ContentType,
   Cookie,
   HeaderType,
-  PassportKeys,
-  StoreRequestCookies,
   getCookieHeader,
   getSetCookieFromResponse,
 } from "@/src/app/utils/http/headers";
 import { storeCookies } from "@/src/app/action";
 import { HttpService } from "@/src/app/utils/http/http-default";
-import { cookies } from "next/headers";
 
 export class AuthServiceClient implements AuthService {
   constructor(private httpInstance: HttpService, private auth_url: string) {

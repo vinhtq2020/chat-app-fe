@@ -6,7 +6,10 @@ import { useRouter } from "next/navigation";
 
 import { login } from "@/src/app/features/auth/actions";
 import { ValidateErrors } from "@/src/app/utils/validate/model";
-import { AlertContext, LoadingContext } from "@/src/app/components/Providers";
+import {
+  AlertContext,
+  LoadingScreenContext,
+} from "@/src/app/components/Providers";
 import { GoogleLoginBtn } from "@/src/app/components/GoogleLoginButton";
 import { Modal } from "@/src/app/components/Modal/Modal";
 import { showAlert } from "@/src/app/components/Toast/Toast";
@@ -32,7 +35,7 @@ export const SignInForm = (props: Props) => {
   const [state, setState] = useState<InternalState>(initialState);
   const refForm = useRef<HTMLFormElement>();
   const alertContext = useContext(AlertContext);
-  const loadingContext = useContext(LoadingContext);
+  const loadingContext = useContext(LoadingScreenContext);
 
   const router = useRouter();
   const updateState = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,14 +56,10 @@ export const SignInForm = (props: Props) => {
   };
 
   const onSignIn = async (e: React.MouseEvent) => {
-    if (loadingContext) {
-      loadingContext.isLoading = true;
-    }
+    loadingContext?.setLoading(true);
     return login(state.email, state.password, navigator.userAgent)
       .then((res) => {
-        if (loadingContext) {
-          loadingContext.isLoading = false;
-        }
+        loadingContext?.setLoading(false);
         if (res as ValidateErrors) {
           setState((prevState) => ({
             ...prevState,
@@ -71,9 +70,7 @@ export const SignInForm = (props: Props) => {
         }
       })
       .catch((err: ResponseError) => {
-        if (loadingContext) {
-          loadingContext.isLoading = false;
-        }
+        loadingContext?.setLoading(false);
         showAlert(alertContext, "Error", err.message);
       });
   };

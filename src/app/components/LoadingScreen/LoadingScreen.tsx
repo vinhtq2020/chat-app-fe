@@ -1,11 +1,11 @@
 "use client";
 import { use } from "react";
-import { LoadingContext, LoadingScreenContext } from "../Providers";
+import { LoadingScreenContext } from "../Providers";
 import ReactPortal from "../ReactPortal/ReactPortal";
 import { DotLoading } from "../DotLoading/DotLoading";
 
 export const LoadingScreen = () => {
-  const loadingScreenContext = use(LoadingContext);
+  const loadingScreenContext = use(LoadingScreenContext);
   return (
     <ReactPortal wrapperId="portal-loading">
       {loadingScreenContext?.isLoading ? (

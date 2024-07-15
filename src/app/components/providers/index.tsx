@@ -48,18 +48,20 @@ export interface InternalizationContext {
 
 export interface LoadingScreenContext {
   isLoading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AlertContext = createContext<AlertContext | undefined>(undefined);
-export const LoadingContext = createContext<LoadingScreenContext | undefined>(
-  undefined
-);
+export const LoadingScreenContext = createContext<
+  LoadingScreenContext | undefined
+>(undefined);
 export const InternalizationContext = createContext<
   InternalizationContext | undefined
 >(undefined);
 
 export const Providers = (props: Props) => {
   const [alertState, setAlertState] = useState<AlertState>();
+  const [isLoading, setLoading] = useState<boolean>(false);
   const changeLanguage = () => {};
 
   return (
@@ -71,9 +73,11 @@ export const Providers = (props: Props) => {
         }}
       >
         <AlertContext.Provider value={{ alertState, setAlertState }}>
-          <LoadingContext.Provider value={{isLoading: false}}>
+          <LoadingScreenContext.Provider
+            value={{ isLoading: isLoading, setLoading: setLoading }}
+          >
             {props.children}
-          </LoadingContext.Provider>
+          </LoadingScreenContext.Provider>
         </AlertContext.Provider>
       </InternalizationContext.Provider>
     </SessionProvider>

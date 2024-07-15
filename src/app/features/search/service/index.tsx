@@ -7,7 +7,11 @@ import {
 } from "../search";
 import { config } from "@/src/app/config";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
-import { ContentType, HeaderType } from "@/src/app/utils/http/headers";
+import {
+  ContentType,
+  getCookieHeader,
+  HeaderType,
+} from "@/src/app/utils/http/headers";
 
 export class SuggestionSearchClient<T> implements SuggestionSearchService<T> {
   private search_url = config.search_url;
@@ -44,9 +48,16 @@ export class SearchClient<T> implements SearchService<T> {
       const searchParams = new URLSearchParams({
         q: q,
       });
-      const res = await this.http.get<SearchResult<T>>(`${this.search_url}?${searchParams}`, {
-        cache: "no-cache",
-      });
+      const res = await this.http.get<SearchResult<T>>(
+        `${this.search_url}?${searchParams}`,
+        {
+          cache: "no-cache",
+          headers: {
+            [HeaderType.contentType]: ContentType.applicationJson,
+            [HeaderType.cookie]: getCookieHeader(),
+          },
+        }
+      );
       return res.body;
       // this.delay(3000);
       // return {

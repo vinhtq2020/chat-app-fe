@@ -8,6 +8,7 @@ import Header from "./components/Header/Header";
 import BottomBar from "./components/BottomBar/BottomBar";
 import AlertModal from "../../components/Toast/Toast";
 import { LoadingScreen } from "../../components/LoadingScreen/LoadingScreen";
+import { CloudIcon } from "../../components/CloudIcon/CloudIcon";
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -34,6 +35,9 @@ export default function RootLayout({
             <div className="fixed right-0 top-0"></div>
           </div>
           <BottomBar />
+          <div className="fixed md:hidden bottom-20 right-4">
+            <CloudIcon/>
+          </div>
           <div id="portal-modal"></div>
             <div id="portal-loading"></div>
             <AlertModal />

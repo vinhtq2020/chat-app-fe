@@ -25,14 +25,13 @@ body {
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
   color: rgb(var(--foreground-rgb));
-  background-image: url("https://blogs.windows.com/wp-content/uploads/prod/sites/2/2021/10/Windows-11-Bloom-Screensaver-Dark-scaled.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  /* background: linear-gradient(
+  /* background: to left linear-gradient(rgba(11,30,63,255), rgba(2, 11, 26, 255)); */
+
+  background: linear-gradient(
     to bottom,
     rgb(70, 214, 126),
     rgba(1, 81, 176, 1)
-  ); */
+  );
   /* background: linear-gradient(
     to bottom,
     #ff359b,

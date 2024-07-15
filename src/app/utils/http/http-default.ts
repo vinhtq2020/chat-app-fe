@@ -9,7 +9,8 @@ interface HttpDefault {
 }
 
 export class HttpService {
-  private baseRequestInit: RequestInit = {};
+  private baseRequestInit: RequestInit = {
+  };
   interceptors: Interceptors;
   isRefreshing: boolean = false;
   requestTimeout?: NodeJS.Timeout;
