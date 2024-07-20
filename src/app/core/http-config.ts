@@ -11,44 +11,48 @@ let httpInstance = new HttpService({
 
 httpInstance.interceptors.response.use(async (response, url, options) => {
   if (response.status == 401) {
-    const deviceId = getDeviceId();
-    const ua = Resource.getUserAgent() ?? "";
-    useAuthService()
-      .getIP()
-      .then(async (res) => {
-        if (
-          deviceId.length == 0 ||
-          userAgent == undefined ||
-          userAgent.length == 0 ||
-          res.ip.length == 0
-        ) {
-          Promise.reject(
-            new Response(undefined, { status: 400, statusText: "Bad Request" })
-          );
-        }
-        return useAuthService()
-          .refresh(deviceId, res.ip, ua!)
-          .then((res) => {
-            if (res) {
-              storeCookies({accessToken: res})
-              return httpInstance.get(url, options);
-            } else {
-              Promise.reject(
-                new Response(undefined, {
-                  status: 400,
-                  statusText: "Bad Request",
-                })
-              );
-            }
-          })
-          .catch((e) => {
-            throw e;
-          });
-      })
-      .finally(() => (httpInstance.isRefreshing = false));
+    handleStatus401(url, options)
   }
   return response;
 });
+
+function handleStatus401(url: string, options: RequestInit) {
+  const deviceId = getDeviceId();
+  const ua = Resource.getUserAgent() ?? "";
+  useAuthService()
+    .getIP()
+    .then(async (res) => {
+      if (
+        deviceId.length == 0 ||
+        userAgent == undefined ||
+        userAgent.length == 0 ||
+        res.ip.length == 0
+      ) {
+        Promise.reject(
+          new Response(undefined, { status: 400, statusText: "Bad Request" })
+        );
+      }
+      return useAuthService()
+        .refresh(deviceId, res.ip, ua!)
+        .then((res) => {
+          if (res) {
+            storeCookies({ accessToken: res });
+            return httpInstance.get(url, options);
+          } else {
+            Promise.reject(
+              new Response(undefined, {
+                status: 400,
+                statusText: "Bad Request",
+              })
+            );
+          }
+        })
+        .catch((e) => {
+          throw e;
+        });
+    })
+    .finally(() => (httpInstance.isRefreshing = false));
+}
 
 export const getHTTPService = () => {
   if (!httpInstance) {
@@ -56,5 +60,5 @@ export const getHTTPService = () => {
       timeout: 30000,
     });
   }
-  return httpInstance
+  return httpInstance;
 };

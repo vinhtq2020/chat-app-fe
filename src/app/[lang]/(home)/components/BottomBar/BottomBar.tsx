@@ -1,7 +1,7 @@
 "use client";
 import { use, useState } from "react";
 import Link from "next/link";
-import { logout } from "@/src/app/features/auth/actions";
+import { logout } from "@/src/app/features/auth/action";
 import { useRouter } from "next/navigation";
 import { AlertContext, LoadingScreenContext } from "@/src/app/components/Providers";
 import { showAlert } from "@/src/app/components/Toast/Toast";

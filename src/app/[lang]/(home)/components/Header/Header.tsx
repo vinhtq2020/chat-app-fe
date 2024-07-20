@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import MessageIcon from "../../../../components/MessageIcon/MessageIcon";
 import { SearchBar } from "../SearchBar/SearchBar";
-import { logout } from "@/src/app/features/auth/actions";
+import { logout } from "@/src/app/features/auth/action";
 
 export default function Header() {
   const alertContext = use(AlertContext);

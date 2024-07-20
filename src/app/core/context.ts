@@ -1,6 +1,8 @@
 import { config } from "../config";
 import { AuthService } from "../features/auth/auth";
 import { AuthServiceClient } from "../features/auth/service";
+import { FriendService } from "../features/friend/friend";
+import { FriendClient } from "../features/friend/service";
 import {
   SearchItem,
   SearchService,
@@ -18,8 +20,10 @@ export class ApplicationContext {
   private userSearchService?: UserSearchService;
   private authService?: AuthService;
   private suggestionSearchService?: SuggestionSearchService<SearchItem>;
+  private friendService?: FriendService;
   private httpService: HttpService;
   private searchService?: SearchService<SearchItem>;
+
   constructor(httpService: HttpService) {
     this.getUserSearchService = this.getUserSearchService.bind(this);
     this.httpService = httpService;
@@ -27,6 +31,7 @@ export class ApplicationContext {
     this.getHttpService = this.getHttpService.bind(this);
     this.getSearchService = this.getSearchService.bind(this);
     this.getSuggestionSearchService = this.getSuggestionSearchService.bind(this);
+    this.getFriendService = this.getFriendService.bind(this);
   }
   getSuggestionSearchService(): SuggestionSearchService<SearchItem> {
     if (!this.suggestionSearchService) {
@@ -62,6 +67,16 @@ export class ApplicationContext {
     }
     return this.authService;
   }
+
+  getFriendService(): FriendService {
+    if(!this.friendService){
+      this.friendService = new FriendClient(
+        this.httpService, config.friend_url
+      )
+    }
+    return this.friendService
+  }
+
   getHttpService(): HttpService {
     if (!this.httpService) {
       this.httpService = new HttpService({
@@ -70,6 +85,7 @@ export class ApplicationContext {
     }
     return this.httpService;
   }
+
 }
 
 let context = new ApplicationContext(
@@ -100,4 +116,8 @@ export const useSearchService = () => {
 
 export const useSuggestionSearchService = () => {
     return getApplicationContext().getSuggestionSearchService();
+}
+
+export const useFriendService = () => {
+  return getApplicationContext().getFriendService();
 }

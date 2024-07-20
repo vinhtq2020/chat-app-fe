@@ -4,7 +4,7 @@ import { useContext, useRef, useState } from "react";
 import { SignUpForm } from "./sign-up-form";
 import { useRouter } from "next/navigation";
 
-import { login } from "@/src/app/features/auth/actions";
+import { login } from "@/src/app/features/auth/action";
 import { ValidateErrors } from "@/src/app/utils/validate/model";
 import {
   AlertContext,
@@ -71,7 +71,7 @@ export const SignInForm = (props: Props) => {
       })
       .catch((err: ResponseError) => {
         loadingContext?.setLoading(false);
-        showAlert(alertContext, "Error", err.message);
+        showAlert(alertContext, "Error", err.body);
       });
   };
   return (
@@ -82,6 +82,11 @@ export const SignInForm = (props: Props) => {
             Sign In
           </h1>
           <div className="flex flex-col pt-4">
+            <span className={`text-red-500 text-sm h-5 px-2 `}>
+              {state.fieldErrors["common"] ?? ""}
+            </span>
+          </div>
+          <div className="flex flex-col pt-2">
             <input
               className="border px-4 rounded-md w-full h-8 text-base"
               type="text"

@@ -1,7 +1,7 @@
 import { ChangeEvent, useContext, useRef, useState } from "react";
 
-import { register } from "@/src/app/features/auth/actions";
-import { AlertContext } from "@/src/app/components/Providers";
+import { register } from "@/src/app/features/auth/action";
+import { AlertContext, LoadingScreenContext } from "@/src/app/components/Providers";
 import { showAlert } from "@/src/app/components/Toast/Toast";
 import { ValidateErrors } from "@/src/app/utils/validate/model";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
@@ -32,11 +32,14 @@ const initialState: InternalState = {
 export const SignUpForm = (props: Props) => {
   const [state, setState] = useState<InternalState>(initialState);
   const alertContext = useContext(AlertContext);
+  const loadingContext = useContext(LoadingScreenContext);
+
   const refForm = useRef<HTMLFormElement>();
   const onClickRegister = async (e: React.MouseEvent) => {
     e.preventDefault();
 
-    try {        
+    try {
+      loadingContext?.setLoading(true)
       const res = await register({
         email: state.email,
         username: state.username,
@@ -53,9 +56,11 @@ export const SignUpForm = (props: Props) => {
           fieldErrors: { ...(res as ValidateErrors) },
         }));
       }
+      loadingContext?.setLoading(false)
     } catch (err: unknown) {
-      console.log((err as ResponseError).body);
       showAlert(alertContext, "Error", (err as ResponseError).body);
+      loadingContext?.setLoading(false)
+
     }
   };
 
@@ -74,6 +79,9 @@ export const SignUpForm = (props: Props) => {
           Sign Up
         </h1>
         <form ref={refForm as any}>
+          <span className={`text-red-500 text-sm h-5 px-2 `}>
+            {state.fieldErrors["common"] ?? ""}
+          </span>
           <div className="flex flex-col pt-4">
             <input
               className="border px-2 rounded-md h-9 text-base"

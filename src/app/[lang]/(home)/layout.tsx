@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { Providers } from "../../components/Providers";
 import { Metadata } from "next";
@@ -36,12 +36,12 @@ export default function RootLayout({
           </div>
           <BottomBar />
           <div className="fixed md:hidden bottom-20 right-4">
-            <CloudIcon/>
+            <CloudIcon />
           </div>
           <div id="portal-modal"></div>
-            <div id="portal-loading"></div>
-            <AlertModal />
-            <LoadingScreen/>
+          <div id="portal-loading"></div>
+          <AlertModal />
+          <LoadingScreen />
         </Providers>
       </body>
     </html>

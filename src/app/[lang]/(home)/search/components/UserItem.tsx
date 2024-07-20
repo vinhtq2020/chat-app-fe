@@ -2,21 +2,20 @@ import { SearchItem } from "@/src/app/features/search/search";
 import React from "react";
 
 interface Props {
-  handleAddFriend?: () => boolean;
+  handleAddFriend?: (userId: string) => Promise<boolean>;
   handleUnFriend?: () => boolean;
   handleCancelAddFriend?: () => boolean;
   user: SearchItem;
 }
 
 export const UserItem = (props: Props) => {
-  const handleAddFriendOnClick = (
+  const handleAddFriendOnClick = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
     if (props.handleAddFriend) {
-      props.handleAddFriend();
+      props.handleAddFriend(props.user.id ?? "");
     }
-    alert("ok");
   };
 
   const handleUnFriendOnClick = (
@@ -64,7 +63,11 @@ export const UserItem = (props: Props) => {
               : (e) => handleCancelAddFriendOnClick(e)
           }
         >
-          {props.user.friendStatus === "none" ? "Kết bạn": props.user.friendStatus === "pending" ? "Huỷ lời mời": "Hủy kết bạn" }
+          {props.user.friendStatus === "none"
+            ? "Kết bạn"
+            : props.user.friendStatus === "pending"
+            ? "Huỷ lời mời"
+            : "Hủy kết bạn"}
         </button>
       )}
     </div>

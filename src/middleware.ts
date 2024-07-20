@@ -92,20 +92,10 @@ export async function middleware(request: NextRequest) {
           return false;
         })
         .catch((e) => {
-          console.log(e);
-
           return false;
         });
       break;
   }
-
-  console.log(
-    tmp,
-    "is ProtectedRoute",
-    isProtectedRoute,
-    "is Authenticated",
-    isAuthenticated
-  );
 
   if (isProtectedRoute) {
     // is Not Login

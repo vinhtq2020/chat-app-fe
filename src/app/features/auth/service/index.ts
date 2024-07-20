@@ -63,7 +63,7 @@ export class AuthServiceClient implements AuthService {
         userId: setCookies["userId"],
       });
       return res.body;
-    } catch (err: unknown) {
+    } catch (err) {            
       throw err;
     }
   }
@@ -135,8 +135,6 @@ export class AuthServiceClient implements AuthService {
       const setCookies = getSetCookieFromResponse(res.headers);
       return setCookies.accessToken;
     } catch (err: unknown) {
-      console.log(err);
-
       throw err;
     }
   }

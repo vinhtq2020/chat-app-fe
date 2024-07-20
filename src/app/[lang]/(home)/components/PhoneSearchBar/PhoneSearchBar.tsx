@@ -1,7 +1,7 @@
 "use client";
 
 import { Resource } from "@/src/app/utils/resource/resourse";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 interface Props {
@@ -18,7 +18,7 @@ const initialState: InternalState = {
 export default function PhoneSearchBar(props: Props) {
   const [state, setState] = useState(initialState);
   const router = useRouter();
-
+  const pathname = usePathname();
   const onChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -35,6 +35,11 @@ export default function PhoneSearchBar(props: Props) {
     });
     
     const searchUrl = `/${Resource.getLocale()}/search?${searchParams.toString()}`
+    if(searchUrl == pathname){
+      router.refresh()
+      return
+    }
+
     router.push(searchUrl);
   };
 

@@ -2,20 +2,27 @@
 }
 
 .cloud-child {
-  animation: cloud-rain 20s linear infinite;
+  animation: cloud-clouddark 5s linear infinite;
 }
 
 .sun {
-  animation: sun-down 20s linear infinite;
+  animation: sun-down 5s linear infinite;
+}
+
+.tear {
+  width: 300px;
+  aspect-ratio: 1;
+  background: black;
+  rotate: 45deg;
+  border-radius: 0 50% 50% 50%;
 }
 
 .mail {
 }
 .mail-dot {
-
 }
 
-@keyframes cloud-rain {
+@keyframes cloud-clouddark {
   0% {
   }
   50% {
@@ -29,4 +36,13 @@
   50% {
     transform: translateY(32px) scale(0);
   }
+}
+
+@keyframe clouddark-rain {
+  0% {
+  }
+  50% {
+    transform: translateY(32px) scale(0);
+  }
+  
 }

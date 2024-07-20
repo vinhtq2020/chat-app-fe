@@ -26,7 +26,7 @@ export async function register(user: Account): Promise<RegisterActionResult> {
       .hasMinLength(12),
     confirmPassword: useSchemaItem("confirm password")
       .isRequired()
-      .match("password", "password is not match"),
+      .match("password", "email or password is incorrect"),
     phone: useSchemaItem("phone").isRequired().phone("phone is not valid"),
   }).validate(user);
 
@@ -60,8 +60,6 @@ export async function login(
   password: string,
   userAgent: string
 ): Promise<ValidateErrors | number> {
-    console.log("login");
-    
   const errs = InputValidate.object({
     email: useSchemaItem("email").isRequired().email("email is not valid"),
     password: useSchemaItem("password").isRequired(),
@@ -86,12 +84,26 @@ export async function login(
     );
 
     return res;
-  } catch (e) {
-    throw e;
+  } catch (e: any) {
+    if (e instanceof ResponseError) {
+      switch (e.status) {
+        case 422:
+          const fieldErrs: ValidateErrors = {};
+          e.body.forEach((item: Error422Message) => {
+            fieldErrs[item.field] = item.message;
+          });
+          return fieldErrs;
+        default:
+          throw e;
+      }
+    } else {
+      throw e;
+    }
+
   }
 }
 export async function logout(userAgent: string): Promise<number> {
-  try {    
+  try {
     const deviceId = getDeviceId();
     const ip = (await useAuthService().getIP()).ip;
 
