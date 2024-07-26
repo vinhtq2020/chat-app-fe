@@ -1,6 +1,6 @@
 "use client";
 
-import { Story } from "../../story";
+import { Story } from "../../../../../features/story/story";
 import StoryDetailComponent from "./StoryDetail";
 import { useDate } from "@/src/app/hooks/useDate";
 

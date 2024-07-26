@@ -71,7 +71,7 @@ export const SignInForm = (props: Props) => {
       })
       .catch((err: ResponseError) => {
         loadingContext?.setLoading(false);
-        showAlert(alertContext, "Error", err.body);
+        showAlert(alertContext, "Error", err.message);
       });
   };
   return (

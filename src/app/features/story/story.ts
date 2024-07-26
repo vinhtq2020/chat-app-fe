@@ -9,6 +9,19 @@ export interface StoryFilter extends Filter {
   createdAt?: Date
 }
 
+export interface Comment {
+  id: number;
+  postId: number;
+  owner: ShortUserInfo;
+  comment: string;
+  emotions: Emotions;
+  images: string[];
+  reply: Comment[];
+  status: 'DELETED' | 'CREATED' | 'EDITTED'
+  histories: History[];
+}
+
+
 export interface Story {
   id?: string;
   author?: ShortUserInfo;

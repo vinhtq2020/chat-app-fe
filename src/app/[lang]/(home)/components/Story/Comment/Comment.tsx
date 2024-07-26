@@ -1,4 +1,4 @@
-import { Comment } from "./service";
+import { Comment } from "@/src/app/features/story/story";
 
 export interface Props {
   comment: Comment;

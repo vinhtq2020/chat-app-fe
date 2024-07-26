@@ -30,7 +30,8 @@ export class ApplicationContext {
     this.getAuthService = this.getAuthService.bind(this);
     this.getHttpService = this.getHttpService.bind(this);
     this.getSearchService = this.getSearchService.bind(this);
-    this.getSuggestionSearchService = this.getSuggestionSearchService.bind(this);
+    this.getSuggestionSearchService =
+      this.getSuggestionSearchService.bind(this);
     this.getFriendService = this.getFriendService.bind(this);
   }
   getSuggestionSearchService(): SuggestionSearchService<SearchItem> {
@@ -69,12 +70,14 @@ export class ApplicationContext {
   }
 
   getFriendService(): FriendService {
-    if(!this.friendService){
+    if (!this.friendService) {
       this.friendService = new FriendClient(
-        this.httpService, config.friend_url
-      )
+        this.httpService,
+        config.friend_url,
+        config.friend_request_url
+      );
     }
-    return this.friendService
+    return this.friendService;
   }
 
   getHttpService(): HttpService {
@@ -85,12 +88,9 @@ export class ApplicationContext {
     }
     return this.httpService;
   }
-
 }
 
-let context = new ApplicationContext(
-    getHTTPService()
-);
+let context = new ApplicationContext(getHTTPService());
 export const getApplicationContext = () => {
   if (!context) {
     context = new ApplicationContext(
@@ -111,13 +111,13 @@ export const useAuthService = () => {
 };
 
 export const useSearchService = () => {
-    return getApplicationContext().getSearchService();
-}
+  return getApplicationContext().getSearchService();
+};
 
 export const useSuggestionSearchService = () => {
-    return getApplicationContext().getSuggestionSearchService();
-}
+  return getApplicationContext().getSuggestionSearchService();
+};
 
 export const useFriendService = () => {
   return getApplicationContext().getFriendService();
-}
+};

@@ -43,16 +43,16 @@ export class AuthServiceClient implements AuthService {
       const res = await this.httpInstance.post<number>(
         `${this.auth_url}/login`,
         {
+          email: email,
+          password: password,
+        },
+        {
           headers: {
             [HeaderType.contentType]: ContentType.applicationJson,
             [HeaderType.deviceId]: deviceId,
             [HeaderType.userAgent]: userAgent,
             [HeaderType.xForwardedFor]: ip,
           },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
           cache: "no-cache",
         }
       );
@@ -63,7 +63,7 @@ export class AuthServiceClient implements AuthService {
         userId: setCookies["userId"],
       });
       return res.body;
-    } catch (err) {            
+    } catch (err) {
       throw err;
     }
   }
@@ -72,11 +72,11 @@ export class AuthServiceClient implements AuthService {
     try {
       const res = await this.httpInstance.post<number>(
         `${this.auth_url}/register`,
+        user,
         {
           headers: {
             [HeaderType.contentType]: ContentType.applicationJson,
           },
-          body: JSON.stringify(user),
         }
       );
 

@@ -42,7 +42,7 @@ export default function BottomBar() {
       });
   };
   return (
-    <div className="fixed z-50 inset-x-0 mx-auto md:hidden bottom-[64px] flex flex-col items-center">
+    <div className="fixed z-50 left-[50%] translate-x-[-50%] mx-auto md:hidden bottom-[64px] flex flex-col items-center">
       <div className="mb-4 mx-auto">
         <PhoneSearchBar hidden={!state.showSearchBar} />
       </div>

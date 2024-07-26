@@ -1,8 +1,8 @@
 "use client"
 import { search } from "@/src/app/features/story/action";
-import Loading from "@/src/app/features/story/components/Story/Loading";
-import { StoryComponent } from "@/src/app/features/story/components/Story/Story";
-import { StoryPost } from "@/src/app/features/story/components/Story/StoryPost";
+import Loading from "@/src/app/[lang]/(home)/components/Story/Story/Loading";
+import { StoryComponent } from "@/src/app/[lang]/(home)/components/Story/Story/Story";
+import { StoryPost } from "@/src/app/[lang]/(home)/components/Story/Story/StoryPost";
 import { Story } from "@/src/app/features/story/story";
 import React, { Suspense, useEffect, useState } from "react";
 

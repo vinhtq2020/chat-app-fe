@@ -86,6 +86,7 @@ export async function login(
     return res;
   } catch (e: any) {
     if (e instanceof ResponseError) {
+      
       switch (e.status) {
         case 422:
           const fieldErrs: ValidateErrors = {};

@@ -4,36 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import ChatInput from "./components/chat-input";
 import ChatMessage from "./components/chat-message";
 import ContactList from "./components/contact-list";
-const ChatPage = () => {
-  const [wsInstance, setWsInstance] = useState<WebSocket | null>(null);
-
-  const updateWs = useCallback(
-    (url: string) => {
-      if (wsInstance == null) return;
-      if (typeof window === "undefined") return setWsInstance(null);
-      
-      // Close the old connection
-      if (wsInstance?.readyState !== 3) {
-        wsInstance?.close();
-      }
-
-      const newWs = new WebSocket(url)
-      setWsInstance(newWs)
-    },
-    [wsInstance]
-  );
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const ws = new WebSocket("");
-      setWsInstance(ws);
-    }
-
-    return () => {
-      if (wsInstance?.readyState !== 3) {
-        wsInstance?.close();
-      }
-    };
-  }, []);
+const ChatPage = () => {  
 
   return (
     <div className="bg-transparent flex-1 rounded-lg flex sm:flex-col md:flex-row overflow-hidden gap-4 p-4 mx-auto w-3/4">
