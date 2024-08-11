@@ -112,12 +112,12 @@ export class HttpService {
     
     return this.sendRequest<T>(url, { ...options, method: METHOD.POST });
   }
-  put<T>(url: string, options?: RequestInit): Promise<HttpResponse<T>> {
-    options = { ...this.baseRequestInit, ...options };
+  put<T>(url: string, body: Object, options?: RequestInit): Promise<HttpResponse<T>> {
+    options = { ...this.baseRequestInit, ...options, body: JSON.stringify(body)};    
     return this.sendRequest<T>(url, { ...options, method: METHOD.PUT });  
   }
-  patch<T>(url: string, options?: RequestInit): Promise<HttpResponse<T>> {
-    options = { ...this.baseRequestInit, ...options };
+  patch<T>(url: string, body: Object, options?: RequestInit): Promise<HttpResponse<T>> {
+    options = { ...this.baseRequestInit, ...options, body: JSON.stringify(body)};    
     return this.sendRequest<T>(url, { ...options, method: METHOD.PATCH });
   }
   delete<T>(url: string, options?: RequestInit): Promise<HttpResponse<T>> {

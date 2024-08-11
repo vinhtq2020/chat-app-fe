@@ -1,19 +1,37 @@
 export interface Notification {
-  id?: string;
-  title?: string;
-  content?: string;
-  requestor?: Requestor;
-  type?: NotificationType;
-  url?: string;
+  id: string;
+  title: string;
+  content: string;
+  requester: Requester;
+  subscribers: Subscriber[];
+  type: NotificationType;
+  url: string;
   createdAt: string;
   createdBy: string;
-  isRead?: boolean;
 }
 
-interface Requestor {
+export interface Subscriber {
+  id: string;
+  readed: boolean;
+}
+
+interface Requester {
   id?: string;
-  name?: string;
-  avatarURL?: string;
+  name: string;
+  avatarURL: string;
+  requestId: string;
 }
 
-type NotificationType = "inform" | "invite"
+export interface NotificationFilter {
+  subscriberId?: string;
+  createdFrom?: Date;
+  createdTo?: Date;
+  Visible?: boolean;
+}
+
+export interface NotificationService {
+  Search(filter: NotificationFilter): Promise<Notification[]>;
+  Patch(notification: Notification): Promise<number>;
+}
+
+type NotificationType = "inform" | "addfriend";

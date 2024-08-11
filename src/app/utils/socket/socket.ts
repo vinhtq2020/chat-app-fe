@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 
-export class Socket {
+export class Socket <T extends string> {
   private ws: WebSocket;
   private ee: EventEmitter;
   constructor(wurl: string, ee: EventEmitter = new EventEmitter()) {
@@ -14,11 +14,11 @@ export class Socket {
     this.off = this.off.bind(this);
     this.close = this.close.bind(this);
   }
-  on(name: string, listener: (...args: any[]) => void) {
+  on(name: T, listener: (...args: any[]) => void) {
     this.ee.on(name, listener);
   }
 
-  off(name: string, listener: (...args: any[]) => void) {
+  off(name: T, listener: (...args: any[]) => void) {
     this.ee.removeListener(name, listener);
   }
 
@@ -26,12 +26,12 @@ export class Socket {
     console.log("websocket error: ", e);
   }
 
-  emit<R>(name: string, data: R) {
+  emit<R>(name: T, data: R) {
     const message = JSON.stringify({ name, data });    
     this.ws.send(message);
   }
 
-  open(event: Event) {
+  open() {
     this.ee.emit("connect");
   }
 

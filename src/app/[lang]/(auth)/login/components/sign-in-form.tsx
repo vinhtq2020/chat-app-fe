@@ -6,14 +6,13 @@ import { useRouter } from "next/navigation";
 
 import { login } from "@/src/app/features/auth/action";
 import { ValidateErrors } from "@/src/app/utils/validate/model";
-import {
-  AlertContext,
-  LoadingScreenContext,
-} from "@/src/app/components/Providers";
+
 import { GoogleLoginBtn } from "@/src/app/components/GoogleLoginButton";
 import { Modal } from "@/src/app/components/Modal/Modal";
 import { showAlert } from "@/src/app/components/Toast/Toast";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
+import { AlertContext } from "@/src/app/components/Providers/AlertProvider";
+import { LoadingScreenContext } from "@/src/app/components/Providers/LoadingProvider";
 
 export interface Props {}
 
@@ -68,6 +67,7 @@ export const SignInForm = (props: Props) => {
         } else if (res == 1) {
           router.refresh();
         }
+
       })
       .catch((err: ResponseError) => {
         loadingContext?.setLoading(false);

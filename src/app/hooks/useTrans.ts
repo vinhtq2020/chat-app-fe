@@ -1,5 +1,7 @@
-import { Locale, localeConfig } from "../utils/resource/locales";
+"use client"
+import { getDictionary, Locale, localeConfig } from "../utils/resource/locales";
 import { redirect, usePathname, useRouter } from "next/navigation";
+import { Sprintf } from "../utils/string/string";
 
 export default function useTrans() {
   const pathname = usePathname();
@@ -33,9 +35,15 @@ export default function useTrans() {
     redirect(redirectedPathname(locale));
   };
 
+  const localized = (key: string, ...value: string[]) =>  {
+    const locale = currentLanguage();
+    return Sprintf(getDictionary(locale)[key], ...value);
+  }
+
   return {
     redirectedPathname,
     currentLanguage,
     changeLanguage,
+    localized
   };
 }

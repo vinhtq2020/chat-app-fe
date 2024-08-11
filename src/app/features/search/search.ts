@@ -14,10 +14,10 @@ export interface SearchResult<T> {
   total: number
 }
 
-export interface SuggestionSearchService<T> {
-  search(q: string): Promise<SearchResult<T>>;
+export interface SuggestionSearchService {
+  search(q: string): Promise<SearchResult<SearchItem>>;
 }
 
-export interface SearchService<T> {
-  search(q: string): Promise<SearchResult<T>>;
+export interface SearchService {
+  search(q: string): Promise<SearchResult<SearchItem>>;
 }

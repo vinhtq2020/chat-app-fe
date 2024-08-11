@@ -31,11 +31,14 @@ export async function removeCookies() {
 /**
  * Check authentication from acess token and refresh token.
  */
-export const checkAuthentication = (): "token_expired" | "authenticated" | "need_refresh" => {
+export const checkAuthentication = ():
+  | "token_expired"
+  | "authenticated"
+  | "need_refresh" => {
   const accessToken = cookies().get("accessToken");
   const userId = cookies().get("userId");
   const refreshToken = cookies().get("refreshToken");
-  
+
   if (refreshToken && accessToken == undefined) {
     return "need_refresh";
   }
@@ -66,4 +69,13 @@ export const getNewAccessTokenAction = async (
       });
   }
   return undefined;
+};
+
+export const getUserId = async () => {
+  const userIdCookie = cookies().get("userId");
+  if (userIdCookie) {
+    return userIdCookie.value;
+  } else {
+    return "";
+  }
 };

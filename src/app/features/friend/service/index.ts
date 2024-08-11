@@ -14,6 +14,34 @@ export class FriendClient implements FriendService {
   ) {
     this.addFriend = this.addFriend.bind(this);
   }
+  async accept(requestId: string): Promise<number> {
+    const res = await this.httpInstance.patch<number>(
+      `${this.friend_request_url}/${requestId}/accept`,
+      {},
+      {
+        headers: {
+          [HeaderType.contentType]: ContentType.applicationJson,
+          [HeaderType.cookie]: getCookieHeader(),
+        },
+        cache: "no-cache",
+      }
+    );
+    return res.body;
+  }
+  async reject(requestId: string): Promise<number> {
+    const res = await this.httpInstance.patch<number>(
+      `${this.friend_request_url}/${requestId}/reject`,
+      {},
+      {
+        headers: {
+          [HeaderType.contentType]: ContentType.applicationJson,
+          [HeaderType.cookie]: getCookieHeader(),
+        },
+        cache: "no-cache",
+      }
+    );
+    return res.body;
+  }
 
   async addFriend(requesteeId: string): Promise<number> {
     const res = await this.httpInstance.post<number>(

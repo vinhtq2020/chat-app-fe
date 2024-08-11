@@ -1,4 +1,6 @@
-import { Locale, getDictionary, localeConfig } from "./locales";
+import useTrans from "../../hooks/useTrans";
+import { Sprintf } from "../string/string";
+import { getDictionary, Locale, localeConfig } from "./locales";
 import { Session } from "./session/session";
 
 export class Resource {
@@ -61,4 +63,5 @@ export class Resource {
   static getLocale(): Locale {
     return this.locale;
   }
+
 }

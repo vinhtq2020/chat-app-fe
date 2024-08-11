@@ -3,6 +3,8 @@ import { AuthService } from "../features/auth/auth";
 import { AuthServiceClient } from "../features/auth/service";
 import { FriendService } from "../features/friend/friend";
 import { FriendClient } from "../features/friend/service";
+import { NotificationService } from "../features/notification/notification";
+import { NotificationClient } from "../features/notification/service";
 import {
   SearchItem,
   SearchService,
@@ -19,10 +21,11 @@ import { getHTTPService } from "./http-config";
 export class ApplicationContext {
   private userSearchService?: UserSearchService;
   private authService?: AuthService;
-  private suggestionSearchService?: SuggestionSearchService<SearchItem>;
+  private suggestionSearchService?: SuggestionSearchService;
   private friendService?: FriendService;
   private httpService: HttpService;
-  private searchService?: SearchService<SearchItem>;
+  private searchService?: SearchService;
+  private notificationService?: NotificationService;
 
   constructor(httpService: HttpService) {
     this.getUserSearchService = this.getUserSearchService.bind(this);
@@ -34,7 +37,7 @@ export class ApplicationContext {
       this.getSuggestionSearchService.bind(this);
     this.getFriendService = this.getFriendService.bind(this);
   }
-  getSuggestionSearchService(): SuggestionSearchService<SearchItem> {
+  getSuggestionSearchService(): SuggestionSearchService {
     if (!this.suggestionSearchService) {
       this.suggestionSearchService = new SuggestionSearchClient(
         this.httpService
@@ -80,6 +83,13 @@ export class ApplicationContext {
     return this.friendService;
   }
 
+  getNotificationService(): NotificationService {
+    if (!this.notificationService) {
+      this.notificationService = new NotificationClient(this.httpService, config.notification_url)
+    }
+    return this.notificationService;
+  }
+
   getHttpService(): HttpService {
     if (!this.httpService) {
       this.httpService = new HttpService({
@@ -120,4 +130,8 @@ export const useSuggestionSearchService = () => {
 
 export const useFriendService = () => {
   return getApplicationContext().getFriendService();
+};
+
+export const useNotificationService = () => {
+  return getApplicationContext().getNotificationService();
 };
