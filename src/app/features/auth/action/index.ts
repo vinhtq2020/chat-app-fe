@@ -9,7 +9,7 @@ import {
 } from "../../../utils/exception/model/response";
 import { getDeviceId, getIP } from "../../../utils/auth";
 import { removeCookies } from "../../../action";
-import { useAuthService } from "@/src/app/core/context";
+import { useAuthService } from "@/src/app/core/server/context";
 
 type RegisterActionResult = number | ValidateErrors;
 

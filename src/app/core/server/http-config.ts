@@ -1,9 +1,9 @@
-import { getDeviceId } from "../utils/auth";
-import { HttpService } from "../utils/http/http-default";
+import { getDeviceId } from "../../utils/auth";
+import { HttpService } from "../../utils/http/http-default";
 import { userAgent } from "next/server";
-import { Resource } from "../utils/resource/resourse";
+import { Resource } from "../../utils/resource/resourse";
 import { useAuthService } from "./context";
-import { storeCookies } from "../action";
+import { storeCookies } from "../../action";
 
 let httpInstance = new HttpService({
   timeout: 30000,

@@ -1,33 +1,13 @@
 import { createContext, ReactNode, useState } from "react";
-import {
-  getDictionary,
-  Locale,
-  localeConfig,
-  LocaleConfig,
-} from "../../utils/resource/locales";
-import { Sprintf } from "../../utils/string/string";
+
+import { InternalizationContext, InternalizationState } from "./InternalizationContext";
+import { Sprintf } from "@/src/app/utils/string";
+import { getDictionary, Locale, localeConfig } from "@/src/app/utils/resource/locales";
 
 export interface Props {
   children: ReactNode;
 }
 
-/**
- * state interface for internalization context
- */
-export interface InternalizationState {
-  localeConfig: LocaleConfig;
-  currentLocale: Locale;
-}
-
-export interface InternalizationContext {
-  internalization: InternalizationState;
-  changeLanguage: (locale: Locale) => void;
-  localize: (key: string, ...val: string[]) => string;
-}
-
-export const internalizationContext = createContext<
-  InternalizationContext | undefined
->(undefined);
 
 export default function InternalizationProvider(props: Props) {
   const [internalization, setInternalization] = useState<InternalizationState>({
@@ -46,7 +26,7 @@ export default function InternalizationProvider(props: Props) {
 
   return (
     <>
-      <internalizationContext.Provider
+      <InternalizationContext.Provider
         value={{
           internalization: internalization,
           changeLanguage: changeLanguage,
@@ -54,7 +34,7 @@ export default function InternalizationProvider(props: Props) {
         }}
       >
         {props.children}
-      </internalizationContext.Provider>
+      </InternalizationContext.Provider>
     </>
   );
 }

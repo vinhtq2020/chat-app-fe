@@ -1,11 +1,12 @@
 import { ChangeEvent, useContext, useRef, useState } from "react";
 
 import { register } from "@/src/app/features/auth/action";
-import { AlertContext, LoadingScreenContext } from "@/src/app/components/Providers";
 import { showAlert } from "@/src/app/components/Toast/Toast";
 import { ValidateErrors } from "@/src/app/utils/validate/model";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
 import { Account } from "@/src/app/features/auth/auth";
+import { AlertContext } from "@/src/app/core/client/store/alert/AlertContext";
+import { LoadingScreenContext } from "@/src/app/core/client/store/loading/LoadingContext";
 
 export interface Props {
   onRegisterSuccess: () => void;

@@ -3,10 +3,11 @@ import { use, useState } from "react";
 import Link from "next/link";
 import { logout } from "@/src/app/features/auth/action";
 import { useRouter } from "next/navigation";
-import { AlertContext, LoadingScreenContext } from "@/src/app/components/Providers";
 import { showAlert } from "@/src/app/components/Toast/Toast";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
 import PhoneSearchBar from "../PhoneSearchBar/PhoneSearchBar";
+import { AlertContext } from "@/src/app/core/client/store/alert/AlertContext";
+import { LoadingScreenContext } from "@/src/app/core/client/store/loading/LoadingContext";
 
 interface InternalState {
   showSearchBar: boolean;

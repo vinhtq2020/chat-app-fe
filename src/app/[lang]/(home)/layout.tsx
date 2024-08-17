@@ -1,6 +1,5 @@
 import { Suspense, use } from "react";
 import Sidebar from "../../components/Sidebar/Sidebar";
-import { AuthContext, Providers } from "../../components/Providers";
 import { Metadata } from "next";
 import Loading from "./loading";
 import "../../globals.css";
@@ -10,6 +9,8 @@ import AlertModal from "../../components/Toast/Toast";
 import { LoadingScreen } from "../../components/LoadingScreen/LoadingScreen";
 import NotificationComponent from "./components/Notification/Notification";
 import { getUserId } from "../../action";
+import { search } from "../../features/notification/action";
+import { Providers } from "../../core/client/store";
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -23,20 +24,25 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const userId = await getUserId();
+  const notifications = await search();
 
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body>
         <Providers>
           <Header />
-          <div className="w-full flex flex-row justify-between gap-4 p-4 h-[calc(100%-56px)]">
-            <Sidebar />
-            <Suspense fallback={<Loading />}>{children}</Suspense>
-            <div className="fixed right-0 top-0"></div>
-          </div>
+            <div className="w-full flex flex-row justify-between gap-4 p-4 h-[calc(100%-56px)]">
+              <Sidebar />
+              <Suspense fallback={<Loading />}>{children}</Suspense>
+              <div className="fixed right-0 top-0"></div>
+            </div>
           <BottomBar />
           <div className="fixed md:hidden bottom-20 right-4 flex flex-col items-end">
-            <NotificationComponent />
+            <NotificationComponent
+              userId={userId}
+              notifications={notifications}
+            />
           </div>
           <div id="portal-modal"></div>
           <div id="portal-loading"></div>

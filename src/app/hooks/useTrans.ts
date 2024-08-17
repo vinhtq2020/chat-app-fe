@@ -1,7 +1,7 @@
 "use client"
 import { getDictionary, Locale, localeConfig } from "../utils/resource/locales";
 import { redirect, usePathname, useRouter } from "next/navigation";
-import { Sprintf } from "../utils/string/string";
+import { Sprintf } from "../utils/string";
 
 export default function useTrans() {
   const pathname = usePathname();

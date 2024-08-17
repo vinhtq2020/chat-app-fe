@@ -34,4 +34,4 @@ export interface NotificationService {
   Patch(notification: Notification): Promise<number>;
 }
 
-type NotificationType = "inform" | "addfriend";
+type NotificationType = "inform" | "addfriend"| "accept_add_friend" | "reject_add_friend";

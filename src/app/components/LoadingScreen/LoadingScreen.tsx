@@ -1,8 +1,8 @@
 "use client";
 import { use } from "react";
-import { LoadingScreenContext } from "../Providers";
 import ReactPortal from "../ReactPortal/ReactPortal";
 import { DotLoading } from "../DotLoading/DotLoading";
+import { LoadingScreenContext } from "../../core/client/store/loading/LoadingContext";
 
 export const LoadingScreen = () => {
   const loadingScreenContext = use(LoadingScreenContext);

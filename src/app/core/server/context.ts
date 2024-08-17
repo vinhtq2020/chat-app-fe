@@ -1,21 +1,21 @@
-import { config } from "../config";
-import { AuthService } from "../features/auth/auth";
-import { AuthServiceClient } from "../features/auth/service";
-import { FriendService } from "../features/friend/friend";
-import { FriendClient } from "../features/friend/service";
-import { NotificationService } from "../features/notification/notification";
-import { NotificationClient } from "../features/notification/service";
+import { config } from "../../config";
+import { AuthService } from "../../features/auth/auth";
+import { AuthServiceClient } from "../../features/auth/service";
+import { FriendService } from "../../features/friend/friend";
+import { FriendClient } from "../../features/friend/service";
+import { NotificationService } from "../../features/notification/notification";
+import { NotificationClient } from "../../features/notification/service";
 import {
   SearchItem,
   SearchService,
   SuggestionSearchService,
-} from "../features/search/search";
+} from "../../features/search/search";
 import {
   SearchClient,
   SuggestionSearchClient,
-} from "../features/search/service";
-import { UserSearchService } from "../services/user/service";
-import { HttpService } from "../utils/http/http-default";
+} from "../../features/search/service";
+import { UserSearchService } from "../../services/user/service";
+import { HttpService } from "../../utils/http/http-default";
 import { getHTTPService } from "./http-config";
 
 export class ApplicationContext {
@@ -48,7 +48,7 @@ export class ApplicationContext {
 
   getSearchService = () => {
     if (!this.searchService) {
-      this.searchService = new SearchClient<SearchItem>(
+      this.searchService = new SearchClient(
         this.httpService,
         config.search_url
       );

@@ -1,5 +1,5 @@
 import useTrans from "../../hooks/useTrans";
-import { Sprintf } from "../string/string";
+import { Sprintf } from "../string";
 import { getDictionary, Locale, localeConfig } from "./locales";
 import { Session } from "./session/session";
 

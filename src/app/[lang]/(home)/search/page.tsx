@@ -1,36 +1,36 @@
 "use client";
 
-import { search } from "@/src/app/features/search/actions/action";
+import { search } from "@/src/app/features/search/action/action";
 import { useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { SearchItem } from "@/src/app/features/search/search";
 import { showAlert } from "@/src/app/components/Toast/Toast";
 import dynamic from "next/dynamic";
 import Loading from "../loading";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
 import { addFriend } from "@/src/app/features/friend/action";
-import { AlertContext } from "@/src/app/components/Providers/AlertProvider";
+import { AlertContext } from "@/src/app/core/client/store/alert/AlertContext";
+import { SearchContext } from "@/src/app/core/client/store/search/SearchContext";
 
 const UserList = dynamic(() => import("./components/UserList"));
 
 const SearchPage = () => {
-  const [list, setList] = useState<SearchItem[]>([]);
   const alertContext = useContext(AlertContext);
+  const searchContext = useContext(SearchContext);
   const params = useSearchParams();
   const [isLoading, setLoading] = useState<boolean>(true);
 
   async function handleAddFriend(friendId: string): Promise<boolean> {
-    
     try {
       const res = await addFriend(friendId);
       if (res > 0) {
-        const newList = list.map((item) => {
+        const newList = searchContext?.state.list.map((item) => {
           if (item.id == friendId) {
-            item.friendStatus = "pending";
+            item.friendStatus = "pending";            
           }
           return item;
         });
-        setList(newList);
+        
+        searchContext?.searchDispatch({ type: "SEARCH", payload: { list: newList } });
       }
       return res > 0;
     } catch (err: any) {
@@ -43,7 +43,7 @@ const SearchPage = () => {
     setLoading(true);
     search(params.get("q") ?? "")
       .then((result) => {
-        setList(result.list);
+        searchContext?.searchDispatch({ type: "SEARCH", payload: { list: result.list } });
       })
       .catch((error: ResponseError) => {
         showAlert(alertContext, error.message, error.body);
@@ -60,7 +60,7 @@ const SearchPage = () => {
         {isLoading ? (
           <Loading></Loading>
         ) : (
-          list && <UserList list={list} handleAddFriend={handleAddFriend} />
+          searchContext && searchContext.state.list && <UserList list={searchContext.state.list} handleAddFriend={handleAddFriend} />
         )}
       </div>
     </div>

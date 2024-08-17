@@ -11,8 +11,8 @@ import { GoogleLoginBtn } from "@/src/app/components/GoogleLoginButton";
 import { Modal } from "@/src/app/components/Modal/Modal";
 import { showAlert } from "@/src/app/components/Toast/Toast";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
-import { AlertContext } from "@/src/app/components/Providers/AlertProvider";
-import { LoadingScreenContext } from "@/src/app/components/Providers/LoadingProvider";
+import { AlertContext } from "@/src/app/core/client/store/alert/AlertContext";
+import { LoadingScreenContext } from "@/src/app/core/client/store/loading/LoadingContext";
 
 export interface Props {}
 

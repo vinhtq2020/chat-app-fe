@@ -1,10 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useState,
-} from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
 /**
  * State interface for alert toast
@@ -25,16 +19,3 @@ export interface AlertContext {
 }
 
 export const AlertContext = createContext<AlertContext | undefined>(undefined);
-
-interface Props {
-  children: ReactNode;
-}
-
-export default function AlertContextProvider(props: Props) {
-  const [alertState, setAlertState] = useState<AlertState>();
-  return (
-    <AlertContext.Provider
-      value={{ alertState, setAlertState }}
-    >{props.children}</AlertContext.Provider>
-  );
-}

@@ -5,22 +5,12 @@ import {
   SetStateAction,
   useState,
 } from "react";
+import { AuthContext } from "./AuthContext";
 
 interface Props {
   children: ReactNode;
 }
 
-/**
- * State interface for Loading Screen Context
- */
-export interface AuthContext {
-  userId?: string;
-  setUserId: Dispatch<SetStateAction<string | undefined>>;
-}
-
-export const AuthContext = createContext<AuthContext | undefined>(
-  undefined
-);
 
 export default function AuthProvider(props: Props) {
   const [userId, setUserId] = useState<string>();

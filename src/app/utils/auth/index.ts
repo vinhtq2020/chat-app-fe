@@ -1,7 +1,7 @@
 import { cookies } from "next/headers"
 import { uuidv4 } from "../random/random"
 import { Resource } from "../resource/resourse"
-import { useAuthService } from "../../core/context"
+import { useAuthService } from "../../core/server/context"
 
 
 

@@ -1,5 +1,6 @@
-import { config } from "../config";
-import { Socket } from "../utils/socket/socket";
+import { config } from "../../config";
+import { Socket } from "../../utils/socket/socket";
+
 
 export const notificationSocket = new Socket<NotificationEvent>(config.ws.notification_url);
 

@@ -1,5 +1,5 @@
 "use server";
-import { useNotificationService } from "@/src/app/core/context";
+import { useNotificationService } from "@/src/app/core/server/context";
 import { Notification } from "../notification";
 import { cookies } from "next/headers";
 

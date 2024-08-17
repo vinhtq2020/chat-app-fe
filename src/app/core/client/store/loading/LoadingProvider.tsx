@@ -5,22 +5,11 @@ import {
   SetStateAction,
   useState,
 } from "react";
+import { LoadingScreenContext } from "./LoadingContext";
 
 interface Props {
   children: ReactNode;
 }
-
-/**
- * State interface for Loading Screen Context
- */
-export interface LoadingScreenContext {
-  isLoading: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-}
-
-export const LoadingScreenContext = createContext<
-  LoadingScreenContext | undefined
->(undefined);
 
 export default function LoadingProvider(props: Props) {
   const [isLoading, setLoading] = useState<boolean>(false);

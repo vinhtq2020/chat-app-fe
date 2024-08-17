@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getDictionary } from "../utils/resource/locales";
 import { Resource } from "../utils/resource/resourse";
 import useTrans from "./useTrans";
-import { Sprintf } from "../utils/string/string";
+import { Sprintf } from "../utils/string";
 import { usePathname } from "next/navigation";
 
 export function useDate() {

@@ -1,6 +1,6 @@
 "use server";
 
-import { useFriendService } from "@/src/app/core/context";
+import { useFriendService } from "@/src/app/core/server/context";
 
 export async function addFriend(friendId: string): Promise<number> {
   return useFriendService().addFriend(friendId);

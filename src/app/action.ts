@@ -2,7 +2,7 @@
 import { cookies } from "next/headers";
 import { Cookie, StoreRequestCookies } from "./utils/http/headers";
 import { getDeviceId, getIP } from "./utils/auth";
-import { useAuthService } from "./core/context";
+import { useAuthService } from "./core/server/context";
 
 export async function storeCookies(req: StoreRequestCookies) {
   let k: keyof StoreRequestCookies;

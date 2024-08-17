@@ -1,12 +1,12 @@
 "use client";
 import { use } from "react";
 import { showAlert } from "../../../../components/Toast/Toast";
-import { AlertContext } from "../../../../components/Providers";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import MessageIcon from "../../../../components/MessageIcon/MessageIcon";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { logout } from "@/src/app/features/auth/action";
+import { AlertContext } from "@/src/app/core/client/store/alert/AlertContext";
 
 export default function Header() {
   const alertContext = use(AlertContext);

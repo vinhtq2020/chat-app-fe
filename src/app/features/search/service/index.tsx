@@ -13,7 +13,7 @@ import {
   HeaderType,
 } from "@/src/app/utils/http/headers";
 
-export class SuggestionSearchClient<T> implements SuggestionSearchService<T> {
+export class SuggestionSearchClient<T> implements SuggestionSearchService {
   private search_url = config.search_url;
   constructor(private http: HttpService) {
     this.search = this.search.bind(this);
@@ -34,7 +34,7 @@ export class SuggestionSearchClient<T> implements SuggestionSearchService<T> {
   }
 }
 
-export class SearchClient<T> implements SearchService<T> {
+export class SearchClient implements SearchService {
   constructor(private http: HttpService, private search_url: string) {
     this.search = this.search.bind(this);
     this.delay = this.delay.bind(this);

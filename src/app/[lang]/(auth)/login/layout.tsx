@@ -3,9 +3,9 @@ import "../../../globals.css";
 import { Suspense } from "react";
 import Loading from "./loading";
 import { Resource } from "@/src/app/utils/resource/resourse";
-import { Providers } from "@/src/app/components/Providers";
 import AlertModal from "@/src/app/components/Toast/Toast";
 import { LoadingScreen } from "@/src/app/components/LoadingScreen/LoadingScreen";
+import { Providers } from "@/src/app/core/client/store";
 
 
 // const inter = Inter({ subsets: ['latin'] })
