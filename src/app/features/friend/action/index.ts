@@ -13,3 +13,12 @@ export async function accept(requestId: string): Promise<number> {
 export async function reject(requestId: string): Promise<number> {
   return useFriendService().reject(requestId)
 }
+
+// cancel request
+export async function cancel(friendId: string): Promise<number> {
+  return useFriendService().cancel(friendId)
+}
+
+export async function unfriend(friendId: string): Promise<number> {
+  return useFriendService().unfriend(friendId)
+}

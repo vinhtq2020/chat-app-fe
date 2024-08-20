@@ -8,7 +8,14 @@ export const en: { [key: string]: string } = {
   diff_time_year: "{0} years ago",
 
   add_friend: "{0} send you a friend invitation.",
-  accept_add_friended: "you're already accepted friend invitation's {0}.",
-  accept_add_friend: "{0} 're already accepted your friend invitation'.",
-  reject_add_friend: "{0} 're already rejected your friend invitation'.",
+  your_accept_friend: "you've already accepted friend invitation's {0}.",
+  your_reject_friend: "you've already rejected friend invitation's {0}.",
+  accept_friend: "{0} accepted your friend invitation.",
+  reject_friend: "{0} rejected your friend invitation.",
+
+  friend: "friend",
+  unfriend: "unfriend",
+
+  friend_request_cancel: "cancel friend request",
+  friend_request_send: "send friend request",
 };

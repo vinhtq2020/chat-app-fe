@@ -7,12 +7,14 @@ import Loading from "../../loading";
 interface Props {
   list: SearchItem[];
   handleAddFriend?: (userId: string) => Promise<boolean>;
+  handleUnFriend?: (friendId: string) => Promise<boolean>;
+  handleCancelAddFriend?: (friendId: string) => Promise<boolean>;
 }
-function UserList({ list, handleAddFriend }: Props) {
+function UserList({ list, handleAddFriend, handleUnFriend, handleCancelAddFriend }: Props) {
   return (
     <div className="flex flex-col gap-4 h-full overflow-clip p-4">
       {list.map((item) => (
-        <Suspense fallback={<Loading/>} key={item.id}><UserItem user={item}  handleAddFriend={handleAddFriend}/></Suspense>
+        <Suspense fallback={<Loading/>} key={item.id}><UserItem user={item}  handleAddFriend={handleAddFriend} handleUnFriend={handleUnFriend} handleCancelAddFriend={handleCancelAddFriend}/></Suspense>
       ))}
     </div>
   );

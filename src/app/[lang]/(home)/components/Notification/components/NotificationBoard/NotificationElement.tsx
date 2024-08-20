@@ -43,21 +43,26 @@ export function NotificationElement({ noti, userId }: Props) {
             );
 
             break;
-          case "accept_add_friend":
+          case "accept_friend":
             contentString = internalization.localize(
               noti.content,
               noti.requester.name
             );
 
             break;
-          case "reject_add_friend":
+          case "reject_friend":
             contentString = internalization.localize(
               noti.content,
               noti.requester.name
             );
 
             break;
-          case "accept_add_friended":
+          case "your_accept_friend":
+            contentString = internalization.localize(
+              noti.content,
+              noti.requester.name
+            );
+          case "your_reject_friend":
             contentString = internalization.localize(
               noti.content,
               noti.requester.name

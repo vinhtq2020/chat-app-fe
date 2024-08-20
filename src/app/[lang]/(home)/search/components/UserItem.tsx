@@ -1,10 +1,11 @@
-import { SearchItem } from "@/src/app/features/search/search";
-import React from "react";
+import { InternalizationContext } from "@/src/app/core/client/store/internalization/InternalizationContext";
+import { FriendStatus, SearchItem } from "@/src/app/features/search/search";
+import React, { useContext } from "react";
 
 interface Props {
   handleAddFriend?: (userId: string) => Promise<boolean>;
-  handleUnFriend?: () => boolean;
-  handleCancelAddFriend?: () => boolean;
+  handleUnFriend?: (friendId: string) => Promise<boolean>;
+  handleCancelAddFriend?: (friendId: string) => Promise<boolean>;
   user: SearchItem;
 }
 
@@ -13,17 +14,16 @@ export const UserItem = (props: Props) => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    if (props.handleAddFriend) {
-      props.handleAddFriend(props.user.id ?? "");
-    }
+    props.handleAddFriend && props.handleAddFriend(props.user.id ?? "");
+    
   };
-
+  const internalization = useContext(InternalizationContext);
   const handleUnFriendOnClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
     if (props.handleUnFriend) {
-      props.handleUnFriend();
+      props.handleUnFriend && props.handleUnFriend(props.user.id ?? "");
     }
   };
 
@@ -31,9 +31,45 @@ export const UserItem = (props: Props) => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    if (props.handleCancelAddFriend) {
-      props.handleCancelAddFriend();
+    props.handleCancelAddFriend && props.handleCancelAddFriend(props.user.id ?? "");
+
+  };
+
+  const renderButton = (friendStatus?: FriendStatus) => {
+    let content;
+    let action: (e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) => void;
+    switch (friendStatus) {
+      case "A":
+        // show unfriend button
+        content = internalization?.localize("unfriend");
+        action = handleUnFriendOnClick
+        break;
+      case "C":
+      case "R":
+      case null:
+        // show add friend button
+        content = internalization?.localize("friend_request_send");
+        action = handleAddFriendOnClick
+        break;
+      case "P":
+        // show cancel friend request button
+        content = internalization?.localize("friend_request_cancel");
+        action = handleCancelAddFriendOnClick
+        break;
+      default:
+        break;
     }
+    return (
+      <button
+        type="button"
+        className="ml-auto rounded-full shadow-lg block text-sm h-8 bg-[--color-glass-200] px-2 border border-t-[--color-glass-500] border-l-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200]"
+        onClick={
+         (e) => action(e)
+        }
+      >
+        {content}
+      </button>
+    );
   };
 
   return (
@@ -53,23 +89,7 @@ export const UserItem = (props: Props) => {
         <div className="font-semibold text-lg">{props.user.name}</div>
         <div className="font-normal text-sm">{props.user.description}</div>
       </div>
-      {props.user.friendStatus && (
-        <button
-          type="button"
-          className="ml-auto rounded-full shadow-lg block text-sm h-8 bg-[--color-glass-200] px-2 border border-t-[--color-glass-500] border-l-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200]"
-          onClick={
-            props.user.friendStatus === "none"
-              ? (e) => handleAddFriendOnClick(e)
-              : (e) => handleCancelAddFriendOnClick(e)
-          }
-        >
-          {props.user.friendStatus === "none"
-            ? "Kết bạn"
-            : props.user.friendStatus === "pending"
-            ? "Huỷ lời mời"
-            : "Hủy kết bạn"}
-        </button>
-      )}
+      {props.user.friendStatus && renderButton(props.user.friendStatus)}
     </div>
   );
 };

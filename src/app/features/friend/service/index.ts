@@ -59,4 +59,33 @@ export class FriendClient implements FriendService {
     );
     return res.body;
   }
+
+  async unfriend(friendId: string): Promise<number> {
+    const res = await this.httpInstance.get<number>(
+      `${this.friend_url}/${friendId}/unfriend`,
+      {
+        headers: {
+          [HeaderType.contentType]: ContentType.applicationJson,
+          [HeaderType.cookie]: getCookieHeader(),
+        },
+        cache: "no-cache",
+      }
+    );
+    return res.body;
+  }
+
+  async cancel(friendId: string): Promise<number> {
+    const res = await this.httpInstance.get<number>(
+      `${this.friend_request_url}/${friendId}/cancel`,
+
+      {
+        headers: {
+          [HeaderType.contentType]: ContentType.applicationJson,
+          [HeaderType.cookie]: getCookieHeader(),
+        },
+        cache: "no-cache",
+      }
+    );
+    return res.body;
+  }
 }

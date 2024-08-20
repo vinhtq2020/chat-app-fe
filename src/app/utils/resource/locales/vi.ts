@@ -7,7 +7,14 @@ export const vi: { [key: string]: string } = {
   diff_time_week: "{0} tuần trước",
   diff_time_year: "{0} năm trước",
   add_friend: "{0} đã gửi cho bạn lời mời kết bạn.",
-  accept_add_friended: "bạn đã chấp nhận lời mời kết bạn của {0}.",
-  accept_add_friend: "{0} đã chấp nhận lời mời kết bạn của bạn.",
-  reject_add_friend: "{0} đã từ chối lời mời kết bạn của bạn.",
+  your_reject_friend: "bạn đã từ chối lời mời kết bạn của {0}.",
+  your_accept_friend: "bạn đã chấp nhận lời mời kết bạn của {0}.",
+  accept_friend: "{0} đã chấp nhận lời mời kết bạn của bạn.",
+  reject_friend: "{0} đã từ chối lời mời kết bạn của bạn.",
+
+  friend: "bàn bè",
+  unfriend: "huỷ kết bạn",
+
+  friend_request_cancel: "huỷ yêu cầu kết bạn",
+  friend_request_send: "gửi yêu kết bạn",
 };

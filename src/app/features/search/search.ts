@@ -7,7 +7,7 @@ export interface SearchItem {
   friendStatus?: FriendStatus;
 }
 
-type FriendStatus = "none" | "friended" | "pending"
+export type FriendStatus = null | "A" | "P" | "R" | "C"
 
 export interface SearchResult<T> {
   list: T[]
