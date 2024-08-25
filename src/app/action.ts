@@ -71,11 +71,11 @@ export const getNewAccessTokenAction = async (
   return undefined;
 };
 
-export const getUserId = async () => {
+export const getUserIdFromCookie = async () => {
   const userIdCookie = cookies().get("userId");
   if (userIdCookie) {
     return userIdCookie.value;
   } else {
-    return "";
+    return undefined;
   }
 };

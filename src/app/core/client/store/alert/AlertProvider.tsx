@@ -12,7 +12,9 @@ interface Props {
 }
 
 export default function AlertContextProvider(props: Props) {
-  const [alertState, setAlertState] = useState<AlertState>();
+  const [alertState, setAlertState] = useState<AlertState>({
+    
+  });
   return (
     <AlertContext.Provider
       value={{ alertState, setAlertState }}

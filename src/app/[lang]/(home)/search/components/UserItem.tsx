@@ -1,20 +1,23 @@
+import { AuthContext } from "@/src/app/core/client/store/auth/AuthContext";
 import { InternalizationContext } from "@/src/app/core/client/store/internalization/InternalizationContext";
 import { FriendStatus, SearchItem } from "@/src/app/features/search/search";
-import React, { useContext } from "react";
+import React, { use, useContext } from "react";
 
 interface Props {
   handleAddFriend?: (userId: string) => Promise<boolean>;
   handleUnFriend?: (friendId: string) => Promise<boolean>;
-  handleCancelAddFriend?: (friendId: string) => Promise<boolean>;
-  user: SearchItem;
+  handleCancelFriendRequest?: (friendRqId: string) => Promise<boolean>;
+  item: SearchItem;
+  userId?: string;
 }
 
 export const UserItem = (props: Props) => {
+
   const handleAddFriendOnClick = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    props.handleAddFriend && props.handleAddFriend(props.user.id ?? "");
+    props.handleAddFriend && props.handleAddFriend(props.item.id ?? "");
     
   };
   const internalization = useContext(InternalizationContext);
@@ -23,16 +26,15 @@ export const UserItem = (props: Props) => {
   ) => {
     e.preventDefault();
     if (props.handleUnFriend) {
-      props.handleUnFriend && props.handleUnFriend(props.user.id ?? "");
+      props.handleUnFriend && props.handleUnFriend(props.item.id ?? "");
     }
   };
 
-  const handleCancelAddFriendOnClick = (
+  const handleCancelFriendRequestOnClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    props.handleCancelAddFriend && props.handleCancelAddFriend(props.user.id ?? "");
-
+    props.handleCancelFriendRequest && props.handleCancelFriendRequest(props.item.id ?? "");
   };
 
   const renderButton = (friendStatus?: FriendStatus) => {
@@ -46,7 +48,8 @@ export const UserItem = (props: Props) => {
         break;
       case "C":
       case "R":
-      case null:
+      case "U":
+      case undefined:
         // show add friend button
         content = internalization?.localize("friend_request_send");
         action = handleAddFriendOnClick
@@ -54,7 +57,7 @@ export const UserItem = (props: Props) => {
       case "P":
         // show cancel friend request button
         content = internalization?.localize("friend_request_cancel");
-        action = handleCancelAddFriendOnClick
+        action = handleCancelFriendRequestOnClick
         break;
       default:
         break;
@@ -75,7 +78,7 @@ export const UserItem = (props: Props) => {
   return (
     <div
       className="flex flex-row gap-2 text-white rounded-lg items-center shadow-lg p-2 bg-[--color-glass-100]  border border-l-[--color-glass-500] backdrop-blur-md border-t-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200]"
-      key={props.user.id}
+      key={props.item.id}
     >
       <div className="flex shadow-md items-center justify-center h-12 w-12 rounded-full bg-[--color-glass-200] border border-t-[--color-glass-500] border-l-[--color-glass-500] border-r-[--color-glass-200] border-b-[--color-glass-200]">
         <img
@@ -86,10 +89,10 @@ export const UserItem = (props: Props) => {
         />
       </div>
       <div className="flex flex-col">
-        <div className="font-semibold text-lg">{props.user.name}</div>
-        <div className="font-normal text-sm">{props.user.description}</div>
+        <div className="font-semibold text-lg">{props.item.name}</div>
+        <div className="font-normal text-sm">{props.item.description}</div>
       </div>
-      {props.user.friendStatus && renderButton(props.user.friendStatus)}
+      {props.userId && props.item.id != props.userId  && renderButton(props.item.friendStatus)}
     </div>
   );
 };

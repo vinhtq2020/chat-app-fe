@@ -77,7 +77,6 @@ export class ApplicationContext {
       this.friendService = new FriendClient(
         this.httpService,
         config.friend_url,
-        config.friend_request_url
       );
     }
     return this.friendService;

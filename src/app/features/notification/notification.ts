@@ -16,10 +16,9 @@ export interface Subscriber {
 }
 
 interface Requester {
-  id?: string;
+  id: string;
   name: string;
-  avatarURL: string;
-  requestId: string;
+  avatarURL?: string;
 }
 
 export interface NotificationFilter {

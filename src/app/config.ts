@@ -6,7 +6,6 @@ export const config = {
   search_url: host + "/search",
   notification_url: host + "/notification",
   friend_url: host + "/friend",
-  friend_request_url: host + "/friend-request",
   ws: {
     notification_url: wsHost + `/notification/ws`,
   },

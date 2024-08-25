@@ -59,49 +59,6 @@ export class SearchClient implements SearchService {
         }
       );
       return res.body;
-      // this.delay(3000);
-      // return {
-      //   list: [
-      //     {
-      //       id: "1",
-      //       avatarURL: "xzxc",
-      //       name: "HKT",
-      //       description: "Song tai thanh pho Ho Chi Minh",
-      //       friendStatus: "none",
-      //     },
-      //     {
-      //       id: 2,
-      //       avatarURL: "xzxc",
-      //       name: "HKT",
-      //       description: "Song tai thanh pho Ho Chi Minh",
-      //       friendStatus: "friended",
-      //     },
-      //     {
-      //       id: 3,
-      //       avatarURL: "xzxc",
-      //       name: "HKT",
-      //       description: "Song tai thanh pho Ho Chi Minh",
-      //       friendStatus: "pending",
-
-      //     },
-      //     {
-      //       id: 4,
-      //       avatarURL: "xzxc",
-      //       name: "HKT",
-      //       description: "Song tai thanh pho Ho Chi Minh",
-      //       friendStatus: "none",
-
-      //     },
-      //     {
-      //       id: 5,
-      //       avatarURL: "xzxc",
-      //       name: "HKT",
-      //       description: "Song tai thanh pho Ho Chi Minh",
-      //       friendStatus: "none",
-      //     },
-      //   ],
-      //   total: 1,
-      // } as SearchResult<T>;
     } catch (e) {
       throw e;
     }

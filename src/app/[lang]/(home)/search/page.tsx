@@ -1,22 +1,28 @@
 "use client";
 
 import { search } from "@/src/app/features/search/action/action";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { showAlert } from "@/src/app/components/Toast/Toast";
 import dynamic from "next/dynamic";
 import Loading from "../loading";
 import { ResponseError } from "@/src/app/utils/exception/model/response";
-import { addFriend, cancel } from "@/src/app/features/friend/action";
+import { addFriend, cancel, unfriend } from "@/src/app/features/friend/action";
 import { AlertContext } from "@/src/app/core/client/store/alert/AlertContext";
 import { SearchContext } from "@/src/app/core/client/store/search/SearchContext";
+import { AuthContext } from "@/src/app/core/client/store/auth/AuthContext";
+import { getUserIdFromCookie } from "@/src/app/action";
+import { logout } from "@/src/app/features/auth/action";
 
 const UserList = dynamic(() => import("./components/UserList"));
 
 const SearchPage = () => {
   const alertContext = useContext(AlertContext);
   const searchContext = useContext(SearchContext);
+  const authContext = useContext(AuthContext);
+
   const params = useSearchParams();
+  const router = useRouter();
   const [isLoading, setLoading] = useState<boolean>(true);
 
   async function handleAddFriend(friendId: string): Promise<boolean> {
@@ -43,12 +49,12 @@ const SearchPage = () => {
   }
 
   async function handleUnFriend(friendId: string): Promise<boolean> {
-    try {
-      const res = await addFriend(friendId);
+    try {      
+      const res = await unfriend(friendId);
       if (res > 0) {
         const newList = searchContext?.state.list.map((item) => {
           if (item.id == friendId) {
-            item.friendStatus = "A";
+            item.friendStatus = "U";
           }
           return item;
         });
@@ -65,13 +71,14 @@ const SearchPage = () => {
     }
   }
 
-  async function handleCancelAddFriend(friendId: string): Promise<boolean> {
+  async function handleCancelFriendRequest(friendId: string): Promise<boolean> {
     try {
       const res = await cancel(friendId);
       if (res > 0) {
+        
         const newList = searchContext?.state.list.map((item) => {
           if (item.id == friendId) {
-            item.friendStatus = "P";
+            item.friendStatus = "C";
           }
           return item;
         });
@@ -87,6 +94,30 @@ const SearchPage = () => {
       return false;
     }
   }
+
+  useEffect(() => {
+    if (authContext.state.userId == undefined) {
+      getUserIdFromCookie().then((id) => {
+        if (id) {
+          authContext.dispatch({
+            type: "SET_USER_ID",
+            payload: { userId: id },
+          });
+        } else {
+          return logout(navigator.userAgent)
+            .then(() => {
+              showAlert(alertContext, "Success", "Logout success");
+              router.refresh();
+            })
+            .catch((e: any) => {
+              showAlert(alertContext, "Error", e.message);
+            });
+        }
+      }).catch((e: any) => {
+        showAlert(alertContext, "Error", e.message);
+      });;
+    }
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -115,9 +146,10 @@ const SearchPage = () => {
           searchContext &&
           searchContext.state.list && (
             <UserList
+              userId={authContext.state.userId}
               list={searchContext.state.list}
               handleAddFriend={handleAddFriend}
-              handleCancelAddFriend={handleCancelAddFriend}
+              handleCancelAddFriend={handleCancelFriendRequest}
               handleUnFriend={handleUnFriend}
             />
           )

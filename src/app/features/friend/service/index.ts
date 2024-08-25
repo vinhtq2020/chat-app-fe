@@ -10,13 +10,12 @@ export class FriendClient implements FriendService {
   constructor(
     private httpInstance: HttpService,
     private friend_url: string,
-    private friend_request_url: string
   ) {
     this.addFriend = this.addFriend.bind(this);
   }
-  async accept(requestId: string): Promise<number> {
+  async accept(friendId: string): Promise<number> {    
     const res = await this.httpInstance.patch<number>(
-      `${this.friend_request_url}/${requestId}/accept`,
+      `${this.friend_url}/${friendId}/accept`,
       {},
       {
         headers: {
@@ -28,9 +27,9 @@ export class FriendClient implements FriendService {
     );
     return res.body;
   }
-  async reject(requestId: string): Promise<number> {
+  async reject(friendId: string): Promise<number> {
     const res = await this.httpInstance.patch<number>(
-      `${this.friend_request_url}/${requestId}/reject`,
+      `${this.friend_url}/${friendId}/reject`,
       {},
       {
         headers: {
@@ -43,12 +42,10 @@ export class FriendClient implements FriendService {
     return res.body;
   }
 
-  async addFriend(requesteeId: string): Promise<number> {
+  async addFriend(friendId: string): Promise<number> {
     const res = await this.httpInstance.post<number>(
-      this.friend_request_url,
-      {
-        requesteeId: requesteeId,
-      },
+      `${this.friend_url}/${friendId}`,
+      {},
       {
         headers: {
           [HeaderType.contentType]: ContentType.applicationJson,
@@ -61,8 +58,9 @@ export class FriendClient implements FriendService {
   }
 
   async unfriend(friendId: string): Promise<number> {
-    const res = await this.httpInstance.get<number>(
+    const res = await this.httpInstance.patch<number>(
       `${this.friend_url}/${friendId}/unfriend`,
+      {},
       {
         headers: {
           [HeaderType.contentType]: ContentType.applicationJson,
@@ -74,10 +72,10 @@ export class FriendClient implements FriendService {
     return res.body;
   }
 
-  async cancel(friendId: string): Promise<number> {
-    const res = await this.httpInstance.get<number>(
-      `${this.friend_request_url}/${friendId}/cancel`,
-
+  async cancel(requestId: string): Promise<number> {
+    const res = await this.httpInstance.patch<number>(
+      `${this.friend_url}/${requestId}/cancel`,
+      {},
       {
         headers: {
           [HeaderType.contentType]: ContentType.applicationJson,

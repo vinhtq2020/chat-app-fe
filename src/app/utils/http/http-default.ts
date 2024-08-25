@@ -5,7 +5,7 @@ import { ResponseError } from "../exception/model/response";
 import { HttpResponse } from "./response";
 
 interface HttpDefault {
-  timeout: number;
+  timeout?: number;
 }
 
 export class HttpService {

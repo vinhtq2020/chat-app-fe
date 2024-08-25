@@ -8,7 +8,7 @@ import BottomBar from "./components/BottomBar/BottomBar";
 import AlertModal from "../../components/Toast/Toast";
 import { LoadingScreen } from "../../components/LoadingScreen/LoadingScreen";
 import NotificationComponent from "./components/Notification/Notification";
-import { getUserId } from "../../action";
+import { getUserIdFromCookie } from "../../action";
 import { search } from "../../features/notification/action";
 import { Providers } from "../../core/client/store";
 
@@ -24,9 +24,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const userId = await getUserId();
   const notifications = await search();
-
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body>
@@ -40,7 +38,6 @@ export default async function RootLayout({
           <BottomBar />
           <div className="fixed md:hidden bottom-20 right-4 flex flex-col items-end">
             <NotificationComponent
-              userId={userId}
               notifications={notifications}
             />
           </div>

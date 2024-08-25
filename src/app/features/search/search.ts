@@ -7,7 +7,7 @@ export interface SearchItem {
   friendStatus?: FriendStatus;
 }
 
-export type FriendStatus = null | "A" | "P" | "R" | "C"
+export type FriendStatus = | "A" | "P" | "R" | "C" | "U"
 
 export interface SearchResult<T> {
   list: T[]

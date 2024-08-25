@@ -1,13 +1,18 @@
 "use client";
-import { Suspense, use, useEffect, useState } from "react";
+import { Suspense, use, useContext, useEffect, useState } from "react";
 import { CloudIcon } from "./components/CloudIcon/CloudIcon";
 import NotificationBoard from "./components/NotificationBoard/NotificationBoard";
 import { Notification } from "@/src/app/features/notification/notification";
 import { notificationSocket } from "@/src/app/core/client/socket";
 import { SearchContext } from "@/src/app/core/client/store/search/SearchContext";
+import { AlertContext } from "@/src/app/core/client/store/alert/AlertContext";
+import { AuthContext } from "@/src/app/core/client/store/auth/AuthContext";
+import { getUserIdFromCookie } from "@/src/app/action";
+import { logout } from "@/src/app/features/auth/action";
+import { showAlert } from "@/src/app/components/Toast/Toast";
+import { useRouter } from "next/navigation";
 
 interface Props {
-  userId: string;
   notifications: Notification[];
 }
 
@@ -27,13 +32,41 @@ const initialState: InternalState = {
 };
 
 export default function NotificationComponent(props: Props) {
+  const alertContext = useContext(AlertContext);
+  const authContext = useContext(AuthContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (authContext.state.userId == undefined) {
+      getUserIdFromCookie().then((id) => {
+        if (id) {
+          authContext.dispatch({
+            type: "SET_USER_ID",
+            payload: { userId: id },
+          });
+        } else {
+          return logout(navigator.userAgent)
+            .then(() => {
+              showAlert(alertContext, "Success", "Logout success");
+              router.refresh();
+            })
+            .catch((e: any) => {
+              showAlert(alertContext, "Error", e.message);
+            });
+        }
+      }).catch((e: any) => {
+        showAlert(alertContext, "Error", e.message);
+      });;
+    }
+  }, []);
+
   initialState.notifications = props.notifications;
   const [state, setState] = useState<InternalState>(initialState);
-  const searchContext = use(SearchContext) 
+  const searchContext = use(SearchContext);
   const [socketMsg, setSocketMsg] = useState<SocketMsg>({
     name: "",
-    data: undefined
-  })
+    data: undefined,
+  });
   function handleSocketMessage(name: string, data: any) {
     switch (name) {
       case "connect":
@@ -52,17 +85,15 @@ export default function NotificationComponent(props: Props) {
       case "updated":
         console.log("updated");
         const updateItem = data as Notification;
-        const notiIdx = state.notifications.findIndex(
-          (noti) => {
-            return noti.id == updateItem.id
-          }
-        );
+        const notiIdx = state.notifications.findIndex((noti) => {
+          return noti.id == updateItem.id;
+        });
 
         if (notiIdx >= 0) {
           console.log(notiIdx);
           const newNotifications = [...state.notifications];
           newNotifications[notiIdx] = updateItem;
-          
+
           setState((prevState) => ({
             ...prevState,
             notifications: newNotifications,
@@ -74,10 +105,10 @@ export default function NotificationComponent(props: Props) {
     }
   }
 
-  // work around case that state not updated in websocket of useEffect 
+  // work around case that state not updated in websocket of useEffect
   useEffect(() => {
     const messageHandler = (name: string, data: any) => {
-      setSocketMsg({name: name, data: data})
+      setSocketMsg({ name: name, data: data });
     };
 
     notificationSocket.addMessageHandler(messageHandler);
@@ -87,9 +118,9 @@ export default function NotificationComponent(props: Props) {
     };
   }, []);
 
-  useEffect(()=>{
-    handleSocketMessage(socketMsg.name, socketMsg.data)
-  },[socketMsg])
+  useEffect(() => {
+    handleSocketMessage(socketMsg.name, socketMsg.data);
+  }, [socketMsg]);
 
   function onCloudIconToggle(e: React.MouseEvent) {
     e.preventDefault();
@@ -97,14 +128,18 @@ export default function NotificationComponent(props: Props) {
   }
   return (
     <Suspense fallback={<>Loading</>}>
-      <NotificationBoard
-        userId={props.userId}
-        visible={state.toggle}
-        notifications={state.notifications}
-      />
-      <div onClick={(e) => onCloudIconToggle(e)}>
-        <CloudIcon notificationTotal={state.notifications.length} />
-      </div>
+      {authContext.state.userId && (
+        <>
+          <NotificationBoard
+            userId={authContext.state.userId}
+            visible={state.toggle}
+            notifications={state.notifications}
+          />
+          <div onClick={(e) => onCloudIconToggle(e)}>
+            <CloudIcon notificationTotal={state.notifications.length} />
+          </div>
+        </>
+      )}
     </Suspense>
   );
 }
